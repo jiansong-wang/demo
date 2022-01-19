@@ -81,15 +81,15 @@
           switch (itemBTN.name) {
             case "編輯":
               itemBTN.ele.onclick = () => {
-                Popup({ url: `/Tools/MoreCOM?ID=${this.dataset.id}` });
+                //Popup({ url: `/Tools/MoreCOM?ID=${this.dataset.id}` });
               }
               break;
 
             case "刪除":
               itemBTN.ele.onclick = () => {
-                AlertWindow({ info: "確定刪除?", status: "confirm" }).then(() => {
-                  ajaxData({ id: this.id }, "/Tools/Delete");
-                });
+                //AlertWindow({ info: "確定刪除?", status: "confirm" }).then(() => {
+                //  ajaxData({ id: this.id }, "/Tools/Delete");
+                //});
               }
               break;
           }
