@@ -186,28 +186,30 @@
   editArea(data) {
     let inputs = this.editWrap.getElementsByTagName("input");
     let selects = this.editWrap.getElementsByTagName("select");
-    //this.editWrap.innerHTML = `<textarea style="width:100%;height:300px;">${JSON.stringify(data.HtmlJson)}</textarea>`;
     let aa = this.rule.filter(item => item.type === data.HtmlJson.ele)[0];
-    let attrStr = "", styleStr = "";
-    aa.attr.forEach(item => {
-      let attrName = Object.keys(data.HtmlJson.attr).find(a => a === Object.keys(item)[1]);
-      let val = (attrName) ? data.HtmlJson.attr[attrName] : "";
 
-      attrStr += `<div><label>${item.name}：</label>`;
-      if (Array.isArray(item[Object.keys(item)[1]])) {
-        attrStr += `<select name="${Object.keys(item)[1]}">`;
-        item[Object.keys(item)[1]].forEach(item => {
-          attrStr += `<option value="${item}" ${(item === val) ? "selected" : ""}>${item}</option>`;
-        });
-        attrStr += "</select></div>";
-      } else {
-        attrStr += `<input type="text" name="${Object.keys(item)[1]}" value="${val}" data-type="attr"/></div>`;
-      }
-    });
-    aa.style.forEach(item => {
-      attrStr += `<div><label>${item.name}：</label><input type="text" name="${Object.keys(item)[1]}" value="${item[Object.keys(item)[1]]}" data-type="style"/></div>`;
-    });
-    this.editWrap.innerHTML = attrStr + styleStr;
+    if (aa !== undefined) {
+      let attrStr = "", styleStr = "";
+      aa.attr.forEach(item => {
+        let attrName = Object.keys(data.HtmlJson.attr).find(a => a === Object.keys(item)[1]);
+        let val = (attrName) ? data.HtmlJson.attr[attrName] : "";
+
+        attrStr += `<div><label>${item.name}：</label>`;
+        if (Array.isArray(item[Object.keys(item)[1]])) {
+          attrStr += `<select name="${Object.keys(item)[1]}">`;
+          item[Object.keys(item)[1]].forEach(item => {
+            attrStr += `<option value="${item}" ${(item === val) ? "selected" : ""}>${item}</option>`;
+          });
+          attrStr += "</select></div>";
+        } else {
+          attrStr += `<input type="text" name="${Object.keys(item)[1]}" value="${val}" data-type="attr"/></div>`;
+        }
+      });
+      aa.style.forEach(item => {
+        attrStr += `<div><label>${item.name}：</label><input type="text" name="${Object.keys(item)[1]}" value="${item[Object.keys(item)[1]]}" data-type="style"/></div>`;
+      });
+      this.editWrap.innerHTML = attrStr + styleStr;
+    }
 
     for (let i = 0; i < inputs.length; i++) {
       inputs[i].onchange = (e) => {
