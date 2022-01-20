@@ -7,14 +7,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
-    <link rel="stylesheet" href="./init.css" />
-    <link rel="stylesheet" href="./COMLayout.css" />
+    <link rel="stylesheet" href="./WebEditLayout.css" />
   </head>
 
   <body>
-    <div class="COMLayout">
+    <div class="webEditLayout">
       <aside>
-        <div>
+        <div class="headerWrap">
+          <h5>元件區</h5>
+        </div>
+
+        <div class="bodyWrap">
+          <div class="add">
+            <!--<button onclick="Popup({ url: '/Tools/MoreCOM' })">+</button>-->
+          </div>
+
           <ul class="comWrap" id="comWrap"></ul>
         </div>
       </aside>
@@ -25,22 +32,34 @@
         </section>
       </main>
 
-      <div class="attrWrap">
-        <div>屬性</div>
-        <div id="editWrap"></div>
-        <button id="ok">ok</button>
-      </div>
+      <section class="setUp">
+        <div class="attrWrap">
+          <div class="headerWrap">
+            <h5>屬性</h5>
+          </div>
+
+          <div class="bodyWrap">
+            <div id="editWrap"></div>
+          </div>
+        </div>
+        <div class="layerWrap">
+          <div class="headerWrap">
+            <h5>階層</h5>
+          </div>
+
+          <div class="bodyWrap">
+            <ul id="layer">
+              <li>測試</li>
+              <li>測試</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
     </div>
 
-    <div id="systemMenu">
-      <ul>
-        <li>編輯</li>
-        <li>刪除</li>
-      </ul>
-    </div>
-
+    <script src="./SystemMenu.js"></script>
     <script src="./main.js"></script>
-    <script src="./drag.js"></script>
   </body>
 
 </html>

@@ -1,0 +1,116 @@
+﻿/*全局*/
+body {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+.webEditLayout {
+	display: flex;
+	user-select: none;
+}
+
+	.webEditLayout > aside * {
+		padding: 0;
+		margin: 0;
+		box-sizing: border-box;
+	}
+
+	.webEditLayout > .setUp * {
+		padding: 0;
+		margin: 0;
+		box-sizing: border-box;
+	}
+
+	.webEditLayout h5 {
+		font-size: 18px;
+	}
+
+	.webEditLayout .headerWrap {
+		padding: 5px 10px;
+		border-bottom: 1px solid #ccc;
+	}
+
+	.webEditLayout .bodyWrap {
+		padding: 10px;
+		overflow-y: auto;
+	}
+
+	/*	左邊*/
+	.webEditLayout > aside {
+		flex: 0 0 200px;
+		max-height: 100vh;
+		border: 1px solid #ccc;
+		box-shadow: 2px 0 5px rgb(0 0 0/50%);
+		box-sizing: border-box;
+	}
+
+	.webEditLayout .add > button {
+		width: 100%;
+		height: 30px;
+		margin-bottom: 5px;
+	}
+
+	.webEditLayout > aside .comWrap {
+		display: flex;
+		padding: 10px;
+	}
+
+	.webEditLayout .comWrap .com {
+		flex: 0 0 50px;
+		height: 50px;
+		text-align: center;
+		border: 1px solid;
+		list-style: none;
+		cursor: grab;
+	}
+
+		.webEditLayout .comWrap .com:active {
+			cursor: grabbing;
+		}
+
+	/*	中間*/
+	.webEditLayout > main {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		min-width: 320px;
+		width: 100%;
+		height: 100vh;
+		overflow: auto;
+	}
+
+		.webEditLayout > main > section {
+			position: relative;
+			width: 960px;
+			height: 540px;
+		}
+
+			.webEditLayout > main > section > #container {
+				position: absolute;
+				width: inherit;
+				height: inherit;
+				border: 1px solid;
+			}
+
+	/*	右邊*/
+	.webEditLayout .setUp {
+		display: flex;
+		flex-direction: column;
+		flex: 0 0 18%;
+		min-width: 200px;
+		height: 100vh;
+		box-shadow: -2px 0 5px rgb(0 0 0/50%);
+		box-sizing: border-box;
+	}
+
+	.webEditLayout .attrWrap {
+		height: 100%;
+		border: 1px solid #ccc;
+	}
+
+	.webEditLayout .layerWrap {
+		height: 350px;
+		margin-top: auto;
+		border: 1px solid #ccc;
+	}

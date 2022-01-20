@@ -1,0 +1,26 @@
+{
+  "rule": [
+    {
+      "type": "a",
+      "attr": [
+        {
+          "name": "連結",
+          "href": ""
+        },
+        {
+          "name": "開啟方式",
+          "target": [
+            "_self ",
+            "_blank "
+          ]
+        }
+      ],
+      "style": [
+        {
+          "name": "字體大小(需輸入單位)",
+          "font-size": ""
+        }
+      ]
+    }
+  ]
+}

@@ -5,7 +5,7 @@
     "HtmlJson": {
       "ele": "a",
       "attr": {
-        "href": ""
+        "href": "#"
       },
       "text": "超連結",
       "sub": []
