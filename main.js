@@ -1,17 +1,23 @@
-﻿class WebEdit {
+﻿class Drag {
   constructor() {
-    this.container = document.getElementById("container");
-    this.editWrap = document.getElementById("editWrap");
+    this.container = document.querySelector("#container");//內容區
+    this.editWrap = document.querySelector("#editWrap");//編輯區
+    this.inputs = this.editWrap.getElementsByTagName("input");//編輯區所有輸入框
+    this.selects = this.editWrap.getElementsByTagName("select");//編輯區所有選擇框
+    this.com = document.getElementsByClassName("com");
     this.comInfo = null;//所有組件
     this.pageCOMs = [];//頁面所有元件
-    this.rule = null;
+    this.rule = null;//編輯區元件可以修改的規則
+    this.currentFollow = null;//當前選擇的元素
+    this.vdom = new VDomRender();//渲染dom
+
     this.init();
     this.loadRule();
   }
 
   /**初始化左側元件 */
   init() {
-    let comWrap = document.getElementById("comWrap");
+    let comWrap = document.querySelector("#comWrap");
     let xhr = new XMLHttpRequest();
     xhr.open("get", "./test.json");
     xhr.onload = () => {
@@ -20,7 +26,7 @@
       if (this.comInfo.length > 0) {
         this.comInfo.forEach((item) => {
           str += `<li class="com" draggable="true" data-id="${item.ID}"><span>${item.Name}</span></li>`;
-          //item.HtmlJson = JSON.parse(item.HtmlJson.replace(/(?:\\[rn]|[\r\n]+)+| /g, ""));
+          //item.HtmlJson = JSON.parse(item.HtmlJson.replace(/(?:\\[rn]|[\r\n]+)+/g, ""));
           //console.log(item);
         });
         comWrap.innerHTML = str;
@@ -31,6 +37,7 @@
     xhr.send();
   }
 
+  /**載入元件可以修改的規則 */
   loadRule() {
     let xhr = new XMLHttpRequest();
     xhr.open("get", "./editRule.json");
@@ -41,59 +48,11 @@
     xhr.send();
   }
 
-  /**
- * 轉換成html字串
- * @param {object} obj 
- * @returns {string} html
- */
-  parseHtml(obj, id) {
-    let html = `<${obj.ele} data-id="${id}"${this.parseAttr(obj.attr, obj.style)}${obj.text}`;
-    if (obj.sub.length > 0) {
-      obj.sub.forEach((item, index) => {
-        html += this.parseHtml(item, id + "-" + (index + 1));
-      });
-    }
-    switch (obj.ele) {
-      case "img":
-      case "input":
-        html += "/>";
-        break;
-      default:
-        html += `</${obj.ele}>`;
-    }
-    return html;
-  }
-
-
-  /**
-   * 轉換html屬性成字串
-   * @param {Object} obj1 html屬性
-   * @param {Object} obj2 html樣式
-   */
-  parseAttr(obj1, obj2) {
-    let attr = "";
-    let style = "";
-
-    if (obj1 !== undefined) {
-      Object.keys(obj1).map((item) => {
-        attr += `${" " + item}="${obj1[item]}"`;
-      });
-    }
-
-    if (obj2 !== undefined) {
-      Object.keys(obj2).map((item) => {
-        style += ` style="${item}:${obj2[item]}"`;
-      });
-    }
-    return attr + style + ">";
-  }
-
   /**元件的事件*/
   addEvent() {
-    let com = document.getElementsByClassName("com") || [];
-    let menuBTN = (com.length > 0) ? SystemMenu(com) : [];//右鍵系統管理欄按鈕
+    let menuBTN = (this.com.length > 0) ? SystemMenu(this.com) : [];//右鍵系統管理欄按鈕
 
-    for (let item of com) {
+    for (let item of this.com) {
       //拖曳開始
       item.ondragstart = function (e) {
         e.stopPropagation();
@@ -112,14 +71,14 @@
           switch (itemBTN.name) {
             case "編輯":
               itemBTN.ele.onclick = () => {
-                //Popup({ url: `/WebEdit/MoreCOM?ID=${this.dataset.id}` });
+                //Popup({ url: `/Tools/MoreCOM?ID=${this.dataset.id}` });
               };
               break;
 
             case "刪除":
               itemBTN.ele.onclick = () => {
                 //AlertWindow({ info: "確定刪除?", status: "confirm" }).then(() => {
-                //	ajaxData({ id: this.id }, "/WebEdit/Delete");
+                //	ajaxData({ id: this.id }, "/Tools/Delete");
                 //});
               };
               break;
@@ -132,6 +91,7 @@
       e.preventDefault();
       e.stopPropagation();
       if (e.target.dataset.drag || e.target === this.container) {
+        let that = this;
         let id = e.dataTransfer.getData('text/plain');
         let currentCOM = this.comInfo.filter(item => item.ID === id);
 
@@ -140,20 +100,25 @@
         if (currentCOM.length > 0) {
           currentCOM = JSON.parse(JSON.stringify(currentCOM[0]));
           currentCOM.ID = this.pageCOMs.length + 1 + "";
-          currentCOM.htmlStr = this.parseHtml(currentCOM.HtmlJson, currentCOM.ID);
-          let comNode = document.createRange().createContextualFragment(currentCOM.htmlStr).firstChild;
-          currentCOM.ele = comNode;
+          currentCOM.ele = this.vdom.render(currentCOM.HtmlJson, e.target);
 
-          comNode.onclick = (e) => {
+          currentCOM.ele.onclick = function (e) {
             e.preventDefault();
-            let htmlJson = this.pageCOMs.filter(item => item.ID === e.target.dataset.id.split("-")[0])[0];
-            this.editArea(htmlJson);
-            //console.log(htmlJson);
+            this.style.setProperty("--w", this.offsetWidth + "px");
+            this.style.setProperty("--h", this.offsetHeight + "px");
+            let htmlJson = that.pageCOMs.filter(item => item.ID === this.dataset.id.split("-")[0])[0];
+            that.editArea(htmlJson);
+
+            if (that.currentFollow !== null) {
+              that.currentFollow.classList.toggle("follow");
+            }
+            that.currentFollow = this;
+            if (this.className.indexOf("follow") < 0) {
+              this.className += " follow";
+            }
           };
-          this.pageCOMs.push(currentCOM);
-          e.target.append(comNode);
+          that.pageCOMs.push(currentCOM);
         }
-        //console.log(this.pageCOMs);
       }
     };
 
@@ -184,40 +149,46 @@
   * @param {Object} data 元素的JSON資料
   */
   editArea(data) {
-    let inputs = this.editWrap.getElementsByTagName("input");
-    let selects = this.editWrap.getElementsByTagName("select");
-    let aa = this.rule.filter(item => item.type === data.HtmlJson.ele)[0];
-
-    if (aa !== undefined) {
-      let attrStr = "", styleStr = "";
-      aa.attr.forEach(item => {
-        let attrName = Object.keys(data.HtmlJson.attr).find(a => a === Object.keys(item)[1]);
-        let val = (attrName) ? data.HtmlJson.attr[attrName] : "";
-
-        attrStr += `<div><label>${item.name}：</label>`;
-        if (Array.isArray(item[Object.keys(item)[1]])) {
-          attrStr += `<select name="${Object.keys(item)[1]}">`;
-          item[Object.keys(item)[1]].forEach(item => {
-            attrStr += `<option value="${item}" ${(item === val) ? "selected" : ""}>${item}</option>`;
-          });
-          attrStr += "</select></div>";
-        } else {
-          attrStr += `<input type="text" name="${Object.keys(item)[1]}" value="${val}" data-type="attr"/></div>`;
-        }
-      });
-      aa.style.forEach(item => {
-        attrStr += `<div><label>${item.name}：</label><input type="text" name="${Object.keys(item)[1]}" value="${item[Object.keys(item)[1]]}" data-type="style"/></div>`;
-      });
-      this.editWrap.innerHTML = attrStr + styleStr;
+    let rule = this.rule.filter(item => item.type === data.HtmlJson.ele)[0];
+    if (rule === undefined) {
+      this.editWrap.innerHTML = "";
+      return;
     }
+    if (data.HtmlJson.attr === undefined) {
+      data.HtmlJson.attr = {};
+    }
+    if (data.HtmlJson.style === undefined) {
+      data.HtmlJson.style = {};
+    }
+    //編輯區生成
+    let attrStr = "", styleStr = "";
+    rule.attr.forEach(item => {
+      let attrName = Object.keys(data.HtmlJson.attr).find(a => a === Object.keys(item)[1]);
+      let val = (attrName) ? data.HtmlJson.attr[attrName] : "";
 
-    for (let i = 0; i < inputs.length; i++) {
-      inputs[i].onchange = (e) => {
+      attrStr += `<div><label>${item.name}：</label>`;
+      if (Array.isArray(item[Object.keys(item)[1]])) {
+        attrStr += `<select name="${Object.keys(item)[1]}">`;
+        item[Object.keys(item)[1]].forEach(item => {
+          attrStr += `<option value="${item}" ${(item === val) ? "selected" : ""}>${item}</option>`;
+        });
+        attrStr += "</select></div>";
+      } else {
+        attrStr += `<input type="text" name="${Object.keys(item)[1]}" value="${val}" data-type="attr"/></div>`;
+      }
+    });
+    rule.style.forEach(item => {
+      let styleName = Object.keys(data.HtmlJson.style).find(a => a === Object.keys(item)[1]);
+      let val = (styleName) ? data.HtmlJson.style[styleName] : "";
+      attrStr += `<div><label>${item.name}：</label><input type="text" name="${Object.keys(item)[1]}" value="${val}" data-type="style"/></div>`;
+    });
+    this.editWrap.innerHTML = attrStr + styleStr;
+
+    //編輯區
+    for (let i = 0; i < this.inputs.length; i++) {
+      this.inputs[i].onchange = (e) => {
         if (e.target.dataset.type === "attr") {
           data.ele[e.target.name] = e.target.value;
-          if (data.HtmlJson.attr === undefined) {
-            data.HtmlJson.attr = {};
-          }
           data.HtmlJson.attr[e.target.name] = e.target.value;
         } else if (e.target.dataset.type === "style") {
           let styleName = e.target.name.split("-");
@@ -227,26 +198,21 @@
             styleName = styleName[0];
           }
           data.ele.style[styleName] = e.target.value;
-          if (data.HtmlJson.style === undefined) {
-            data.HtmlJson.style = {};
-          }
           data.HtmlJson.style[e.target.name] = e.target.value;
         }
-        data.htmlStr = this.parseHtml(data.HtmlJson, data.ID);
       };
     }
 
-    for (let i = 0; i < selects.length; i++) {
-      selects[i].onchange = (e) => {
+    for (let i = 0; i < this.selects.length; i++) {
+      this.selects[i].onchange = (e) => {
         data.ele[e.target.name] = e.target.value;
         if (data.HtmlJson.attr === undefined) {
           data.HtmlJson.attr = {};
         }
         data.HtmlJson.attr[e.target.name] = e.target.value;
-        data.htmlStr = this.parseHtml(data.HtmlJson, data.ID);
       };
     }
   }
 }
 
-new WebEdit();
+new Drag();
