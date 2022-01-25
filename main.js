@@ -127,6 +127,7 @@
             that.editArea(htmlJson);
 
             that.focus(this);
+            return false;
           };
 
           this.pushChildren(currentCOM);
