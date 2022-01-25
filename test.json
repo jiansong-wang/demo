@@ -55,5 +55,24 @@
         "超連結"
       ]
     }
+  },
+  {
+    "ID": "1a77591c-94ae-4e66-8976-ec40b5a9e91e",
+    "Name": "容器",
+    "HtmlJson": {
+      "ele": "div",
+      "className": "",
+      "props": {
+        "attr": {},
+        "style": {
+          "width": "1200px",
+          "min-height": "50px",
+          "border": "1px solid",
+          "box-sizing": "border-box"
+        },
+        "pseudo": {}
+      },
+      "children": []
+    }
   }
 ]

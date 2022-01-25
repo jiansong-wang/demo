@@ -29,16 +29,17 @@
 		if (this.isTextVdom(vdom)) {
 			return mount(document.createTextNode(vdom));
 		} else if (this.isElementVdom(vdom)) {
-			const dom = mount(document.createElement(vdom.ele));
-			dom.dataset.id = (parent.dataset.id) ? parent.dataset.id + "-" + parent.children.length : parent.children.length;
-			for (const child of vdom.children) {
-				this.render(child, dom);
-			}
-
+			const dom = document.createElement("div");//元素最外層(選取用)
+			const dom2 = document.createElement(vdom.ele);
+			dom2.dataset.id = (parent.dataset.id) ? parent.dataset.id + "-" + (parent.children.length+1) : parent.children.length+1;
 			for (const prop in vdom.props) {
-				this.setAttribute(dom, prop, vdom.props[prop]);
+				this.setAttribute(dom2, prop, vdom.props[prop]);
 			}
-			return dom;
+			for (const child of vdom.children) {
+				this.render(child, dom2);
+			}
+			dom.append(dom2);
+			return mount(dom);
 		}
 	}
 

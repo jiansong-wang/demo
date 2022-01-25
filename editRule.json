@@ -1,26 +1,51 @@
 {
-  "rule": [
-    {
-      "type": "a",
-      "attr": [
-        {
-          "name": "連結",
-          "href": ""
-        },
-        {
-          "name": "開啟方式",
-          "target": [
-            "_self ",
-            "_blank "
-          ]
-        }
-      ],
-      "style": [
-        {
-          "name": "字體大小(需輸入單位)",
-          "font-size": ""
-        }
-      ]
-    }
-  ]
+	"rule": [
+		{
+			"type": "a",
+			"attr": [
+				{
+					"name": "連結",
+					"href": ""
+				},
+				{
+					"name": "開啟方式",
+					"target": [
+						"_self ",
+						"_blank "
+					]
+				}
+			],
+			"style": [
+				{
+					"name": "字體大小(需輸入單位)",
+					"font-size": ""
+				}
+			],
+			"pseudo": []
+		},
+		{
+			"type": "div",
+			"attr": [],
+			"style": [
+				{
+					"name": "寬",
+					"width": ""
+				},
+				{
+					"name": "高",
+					"height": ""
+				},
+				{
+					"name": "內邊距",
+					"padding": ""
+				},
+				{
+					"name": "外邊距",
+					"margin": ""
+				}
+			],
+			"pseudo": [],
+			"isDrop": false
+		}
+	]
 }
