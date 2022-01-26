@@ -74,5 +74,24 @@
       },
       "children": []
     }
+  },
+  {
+    "ID": "17efc702-4dcb-45e9-b327-20e855e82863",
+    "Name": "flexbox",
+    "HtmlJson": {
+      "ele": "div",
+      "className": "",
+      "props": {
+        "attr": {},
+        "style": {
+          "display": "flex",
+          "height": "50px",
+          "border": "1px solid",
+          "box-sizing": "border-box"
+        },
+        "pseudo": {}
+      },
+      "children": []
+    }
   }
 ]

@@ -30,7 +30,10 @@
 			return mount(document.createTextNode(vdom));
 		} else if (this.isElementVdom(vdom)) {
 			const dom = document.createElement("div");//元素最外層(選取用)
-			const dom2 = document.createElement(vdom.ele);
+			if (parent.style.display === "flex") {
+				dom.style.setProperty("width", "var(--w)");
+			}
+			const dom2 = document.createElement(vdom.ele);//主要元素
 			dom2.dataset.id = (parent.dataset.id) ? parent.dataset.id + "-" + (parent.children.length+1) : parent.children.length+1;
 			for (const prop in vdom.props) {
 				this.setAttribute(dom2, prop, vdom.props[prop]);

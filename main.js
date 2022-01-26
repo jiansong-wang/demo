@@ -239,6 +239,10 @@
         who.style.display = "inline-block";
         break;
 
+      case "flex":
+        who.style.display = "block";
+        break;
+
       default:
         who.style.display = getComputedStyle(who.children[0]).display;
     }
@@ -306,13 +310,15 @@
           data.ele.children[0].style[styleName] = e.target.value;
           data.HtmlJson.props.style[e.target.name] = e.target.value;
           if (e.target.name === "width") {
-            data.ele.style.setProperty("--w", e.target.value);
+            if (data.ele.parentNode.style.display === "flex") {
+              data.ele.style.setProperty("--w", e.target.value);
+              data.ele.children[0].style[styleName] = "100%";
+            }
             this.resetFocus(data.ele, (e.target.value ? true : false));
           }
-          if (e.target.name === "height") {
-            data.ele.style.setProperty("--h", e.target.value);
-          }
-          console.log(data.ele.children[0].offsetWidth)
+          //if (e.target.name === "height") {
+          //	data.ele.style.setProperty("--h", e.target.value);
+          //}
         } else if (e.target.dataset.type === "drop") {
           data.ele.children[0].dataset.drop = e.target.checked;
         }
