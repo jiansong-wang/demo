@@ -79,7 +79,7 @@
             case "刪除":
               itemBTN.ele.onclick = () => {
                 //AlertWindow({ info: "確定刪除?", status: "confirm" }).then(() => {
-                //  ajaxData({ id: this.id }, "/Tools/Delete");
+                //	ajaxData({ id: this.id }, "/Tools/Delete");
                 //});
               };
               break;
@@ -114,10 +114,8 @@
             that.focus(htmlJson.ele);
           };
           this.layerWrap.appendChild(layerli);
-
-          currentCOM.ele.style.display = getComputedStyle(currentCOM.ele.children[0]).display;
-          currentCOM.ele.style.setProperty("--w", currentCOM.ele.children[0].offsetWidth + parseFloat(getComputedStyle(currentCOM.ele.children[0]).marginLeft) + parseFloat(getComputedStyle(currentCOM.ele.children[0]).marginRight) + "px");
-          currentCOM.ele.style.setProperty("--h", currentCOM.ele.children[0].offsetHeight + parseFloat(getComputedStyle(currentCOM.ele.children[0]).marginTop) + parseFloat(getComputedStyle(currentCOM.ele.children[0]).marginBottom) + "px");
+          console.log(currentCOM)
+          this.resetFocus(currentCOM.ele, ((currentCOM.HtmlJson.props.style.width) ? true : false));
 
           currentCOM.ele.onclick = function (e) {
             //e.preventDefault();
@@ -211,9 +209,6 @@
    * @param {Element} who 被關注的元素
    */
   focus(who) {
-    who.style.setProperty("--w", who.children[0].offsetWidth + parseFloat(getComputedStyle(who.children[0]).marginLeft) + parseFloat(getComputedStyle(who.children[0]).marginRight) + "px");
-    who.style.setProperty("--h", who.children[0].offsetHeight + parseFloat(getComputedStyle(who.children[0]).marginTop) + parseFloat(getComputedStyle(who.children[0]).marginBottom) + "px");
-
     if (this.currentFollow !== null) {
       this.currentFollow.classList.toggle("follow");
     }
@@ -222,6 +217,30 @@
 
     if (who.className.indexOf("follow") < 0) {
       who.className += " follow";
+    }
+  }
+
+  /**
+   * 關注元素的框框display(主要是塊元素)
+   * @param {Object} who 被關注的元素
+   * @param {boolean} hasValue 被關注的元素的主元素是否有寬
+   */
+  resetFocus(who, hasValue) {
+    switch (getComputedStyle(who.children[0]).display) {
+      case "block":
+        if (hasValue) {
+          who.style.display = "table";
+        } else {
+          who.style.display = getComputedStyle(who.children[0]).display;
+        }
+        break;
+
+      case "inline":
+        who.style.display = "inline-block";
+        break;
+
+      default:
+        who.style.display = getComputedStyle(who.children[0]).display;
     }
   }
 
@@ -286,10 +305,17 @@
           }
           data.ele.children[0].style[styleName] = e.target.value;
           data.HtmlJson.props.style[e.target.name] = e.target.value;
+          if (e.target.name === "width") {
+            data.ele.style.setProperty("--w", e.target.value);
+            this.resetFocus(data.ele, (e.target.value ? true : false));
+          }
+          if (e.target.name === "height") {
+            data.ele.style.setProperty("--h", e.target.value);
+          }
+          console.log(data.ele.children[0].offsetWidth)
         } else if (e.target.dataset.type === "drop") {
           data.ele.children[0].dataset.drop = e.target.checked;
         }
-        data.ele.click();
       };
     }
 

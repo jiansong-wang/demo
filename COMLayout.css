@@ -83,7 +83,7 @@ body {
 
 		.COMLayout > main section {
 			position: relative;
-			width: 1920px;
+			width: 100vw;
 			height: 100vh;
 		}
 
@@ -97,6 +97,7 @@ body {
 
 	.COMLayout .follow {
 		position: relative;
+		border: 1px solid transparent;
 	}
 
 		.COMLayout .follow:before {
@@ -104,8 +105,8 @@ body {
 			position: absolute;
 			top: 0;
 			left: 0;
-			width: var(--w);
-			height: var(--h);
+			right:0;
+			bottom:0;
 			box-shadow: 0 0 0 2px red;
 			z-index: -1;
 		}
