@@ -42,7 +42,8 @@
 				this.render(child, dom2);
 			}
 			dom.append(dom2);
-			return mount(dom);
+			//return mount(dom);
+			return mount(dom2);
 		}
 	}
 

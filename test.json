@@ -93,5 +93,215 @@
       },
       "children": []
     }
+  },
+  {
+    "ID": "17efc702-4dcb-45e9-b327-20e855e82862",
+    "Name": "header",
+    "HtmlJson": {
+      "ele": "header",
+      "className": "",
+      "props": {
+        "attr": {},
+        "style": {
+          "background-color": "#fff",
+          "box-shadow": "1px 1px 4px 0 rgba(0,0,0,.1)",
+          "position": "fixed",
+          "top": "0",
+          "width": "100%",
+          "z-index": "1"
+        },
+        "pseudo": {}
+      },
+      "children": [
+        {
+          "ele": "a",
+          "className": "",
+          "props": {
+            "attr": {
+              "href": "#"
+            },
+            "style": {
+              "display": "block",
+              "float": "left",
+              "font-size": "2em",
+              "padding": "10px 20px",
+              "text-decoration": "none",
+              "color": "#000"
+            },
+            "pseudo": {}
+          },
+          "children": [
+            "CSS Nav"
+          ]
+        },
+        {
+          "ele": "ul",
+          "className": "",
+          "props": {
+            "attr": {},
+            "style": {
+              "margin": "0",
+              "padding": "0",
+              "list-style": "none",
+              "overflow": "hidden",
+              "background-color": "#fff",
+              "clear": "none",
+              "float": "right"
+            },
+            "pseudo": {}
+          },
+          "children": [
+            {
+              "ele": "li",
+              "className": "",
+              "props": {
+                "attr": {},
+                "style": {
+                  "float": "left"
+                },
+                "pseudo": {}
+              },
+              "children": [
+                {
+                  "ele": "a",
+                  "className": "",
+                  "props": {
+                    "attr": {
+                      "href": "#work"
+                    },
+                    "style": {
+                      "display": "block",
+                      "padding": "20px 30px",
+                      "border-right": "1px solid #f4f4f4",
+                      "text-decoration": "none",
+                      "color": "#000"
+                    },
+                    "pseudo": {
+                      "hover": {
+                        "background-color": "#f4f4f4"
+                      }
+                    }
+                  },
+                  "children": [
+                    "Our Work"
+                  ]
+                }
+              ]
+            },
+            {
+              "ele": "li",
+              "className": "",
+              "props": {
+                "attr": {},
+                "style": {
+                  "float": "left"
+                },
+                "pseudo": {}
+              },
+              "children": [
+                {
+                  "ele": "a",
+                  "className": "",
+                  "props": {
+                    "attr": {
+                      "href": "#About"
+                    },
+                    "style": {
+                      "display": "block",
+                      "padding": "20px 30px",
+                      "border-right": "1px solid #f4f4f4",
+                      "text-decoration": "none",
+                      "color": "#000"
+                    },
+                    "pseudo": {
+                      "hover": {
+                        "background-color": "#f4f4f4"
+                      }
+                    }
+                  },
+                  "children": [
+                    "About"
+                  ]
+                }
+              ]
+            },
+            {
+              "ele": "li",
+              "className": "",
+              "props": {
+                "attr": {},
+                "style": {
+                  "float": "left"
+                },
+                "pseudo": {}
+              },
+              "children": [
+                {
+                  "ele": "a",
+                  "className": "",
+                  "props": {
+                    "attr": {
+                      "href": "#Careers"
+                    },
+                    "style": {
+                      "display": "block",
+                      "padding": "20px 30px",
+                      "border-right": "1px solid #f4f4f4",
+                      "text-decoration": "none",
+                      "color": "#000"
+                    },
+                    "pseudo": {
+                      "hover": {
+                        "background-color": "#f4f4f4"
+                      }
+                    }
+                  },
+                  "children": [
+                    "Careers"
+                  ]
+                }
+              ]
+            },
+            {
+              "ele": "li",
+              "className": "",
+              "props": {
+                "attr": {},
+                "style": {
+                  "float": "left"
+                },
+                "pseudo": {}
+              },
+              "children": [
+                {
+                  "ele": "a",
+                  "className": "",
+                  "props": {
+                    "attr": {
+                      "href": "#Contact"
+                    },
+                    "style": {
+                      "display": "block",
+                      "padding": "20px 30px",
+                      "border-right": "1px solid #f4f4f4",
+                      "text-decoration": "none",
+                      "color": "#000"
+                    },
+                    "pseudo": {
+                      "hover": {
+                        "background-color": "#f4f4f4"
+                      }
+                    }
+                  },
+                  "children": [
+                    "Contact"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
   }
 ]

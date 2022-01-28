@@ -1,6 +1,6 @@
-﻿class Drag {
+﻿class WebEdit {
   constructor() {
-    this.container = document.querySelector("#container");//內容區
+    this.container = document.querySelector("#container") || null;//內容區
     this.editWrap = document.querySelector("#editWrap");//編輯區
     this.layerWrap = document.querySelector("#layer");//階層區
     this.inputs = this.editWrap.getElementsByTagName("input");//編輯區所有輸入框
@@ -18,6 +18,13 @@
 
   /**初始化左側元件 */
   init() {
+    const iframe = document.querySelector("iframe");
+    iframe.srcdoc = '<html><head><style>.follow {position:relative;}.follow:before {content:"";position:absolute;top:0;left: 0;right:0;bottom:0;box-shadow: 0 0 0 2px red;}</style></head><body><div id="container" style="height:100vh"></div></body></html>';
+    iframe.onload = () => {
+      this.container = iframe.contentDocument.querySelector("#container");
+      this.addEvent();
+    }
+
     let comWrap = document.querySelector("#comWrap");
     let xhr = new XMLHttpRequest();
     xhr.open("get", "./test.json");
@@ -31,7 +38,7 @@
           //console.log(item);
         });
         comWrap.innerHTML = str;
-        this.addEvent();
+        //this.addEvent();
       }
     };
 
@@ -55,8 +62,10 @@
 
     for (let item of this.com) {
       //拖曳開始
+      console.log(item);
       item.ondragstart = function (e) {
         e.stopPropagation();
+        console.log(this)
         e.dataTransfer.setData('text/plain', this.dataset.id);
         this.style.opacity = 0.5;
       };
@@ -91,6 +100,7 @@
     this.container.ondrop = (e) => {
       e.preventDefault();
       e.stopPropagation();
+
       if (e.target.dataset.drop === "true" || e.target === this.container) {
         const that = this;
         const id = e.dataTransfer.getData('text/plain');
@@ -114,14 +124,13 @@
             that.focus(htmlJson.ele);
           };
           this.layerWrap.appendChild(layerli);
-          console.log(currentCOM)
-          this.resetFocus(currentCOM.ele, ((currentCOM.HtmlJson.props.style.width) ? true : false));
+          //this.resetFocus(currentCOM.ele, ((currentCOM.HtmlJson.props.style.width) ? true : false));
 
           currentCOM.ele.onclick = function (e) {
             //e.preventDefault();
             e.stopPropagation();
 
-            const htmlJson = that.searchEleJson(this.children[0].dataset.id);
+            const htmlJson = that.searchEleJson(this.dataset.id);
             that.editArea(htmlJson);
 
             that.focus(this);
@@ -179,6 +188,7 @@
     } else {
       this.pageCOMs.push(currentCOM);
     }
+    console.log(this.pageCOMs)
   }
 
   /**
@@ -196,7 +206,9 @@
           if (node.ID === id) {
             return node;
           } else {
-            node.HtmlJson.children && list.push(...node.HtmlJson.children);
+            if (node.HtmlJson) {
+              node.HtmlJson.children && list.push(...node.HtmlJson.children);
+            }
           }
         })(node);
       }
@@ -226,25 +238,25 @@
    * @param {boolean} hasValue 被關注的元素的主元素是否有寬
    */
   resetFocus(who, hasValue) {
-    switch (getComputedStyle(who.children[0]).display) {
-      case "block":
-        if (hasValue) {
-          who.style.display = "table";
-        } else {
-          who.style.display = getComputedStyle(who.children[0]).display;
-        }
-        break;
+    switch (getComputedStyle(who).display) {
+      //case "block":
+      //	if (hasValue) {
+      //		who.style.display = "table";
+      //	} else {
+      //		who.style.display = getComputedStyle(who).display;
+      //	}
+      //	break;
 
-      case "inline":
-        who.style.display = "inline-block";
-        break;
+      //case "inline":
+      //	who.style.display = "inline-block";
+      //	break;
 
-      case "flex":
-        who.style.display = "block";
-        break;
+      //case "flex":
+      //	who.style.display = "block";
+      //	break;
 
       default:
-        who.style.display = getComputedStyle(who.children[0]).display;
+        who.style.display = getComputedStyle(who).display;
     }
   }
 
@@ -289,7 +301,7 @@
     });
 
     if (rule.isDrop !== undefined) {
-      otherStr += `<div><label>是否可以嵌套：</label><input type="checkbox" ${(data.ele.children[0].dataset.drop === "true" ? "checked" : "")} data-type="drop"/>`;
+      otherStr += `<div><label>是否可以嵌套：</label><input type="checkbox" ${(data.ele.dataset.drop === "true" ? "checked" : "")} data-type="drop"/>`;
     }
 
     this.editWrap.innerHTML = attrStr + styleStr + otherStr;
@@ -298,7 +310,7 @@
     for (let i = 0; i < this.inputs.length; i++) {
       this.inputs[i].onchange = (e) => {
         if (e.target.dataset.type === "attr") {
-          data.ele.children[0][e.target.name] = e.target.value;
+          data.ele[e.target.name] = e.target.value;
           data.HtmlJson.props.attr[e.target.name] = e.target.value;
         } else if (e.target.dataset.type === "style") {
           let styleName = e.target.name.split("-");
@@ -307,27 +319,25 @@
           } else {
             styleName = styleName[0];
           }
-          data.ele.children[0].style[styleName] = e.target.value;
+          data.ele.style[styleName] = e.target.value;
           data.HtmlJson.props.style[e.target.name] = e.target.value;
           if (e.target.name === "width") {
-            if (data.ele.parentNode.style.display === "flex") {
-              data.ele.style.setProperty("--w", e.target.value);
-              data.ele.children[0].style[styleName] = "100%";
-            }
+            data.ele.style.setProperty("--w", e.target.value);
             this.resetFocus(data.ele, (e.target.value ? true : false));
           }
-          //if (e.target.name === "height") {
-          //	data.ele.style.setProperty("--h", e.target.value);
-          //}
+          if (e.target.name === "height") {
+            data.ele.style.setProperty("--h", e.target.value);
+          }
+          console.log(data.ele.offsetWidth)
         } else if (e.target.dataset.type === "drop") {
-          data.ele.children[0].dataset.drop = e.target.checked;
+          data.ele.dataset.drop = e.target.checked;
         }
       };
     }
 
     for (let i = 0; i < this.selects.length; i++) {
       this.selects[i].onchange = (e) => {
-        data.ele.children[0][e.target.name] = e.target.value;
+        data.ele[e.target.name] = e.target.value;
         data.HtmlJson.props.attr[e.target.name] = e.target.value;
         data.ele.click();
       };
@@ -335,4 +345,4 @@
   }
 }
 
-new Drag();
+new WebEdit();
