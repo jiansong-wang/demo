@@ -1,6 +1,6 @@
 ﻿class WebEdit {
   constructor() {
-    this.container = document.querySelector("#container") || null;//內容區
+    this.container = null;//內容區
     this.editWrap = document.querySelector("#editWrap");//編輯區
     this.layerWrap = document.querySelector("#layer");//階層區
     this.inputs = this.editWrap.getElementsByTagName("input");//編輯區所有輸入框
@@ -13,167 +13,202 @@
     this.vdom = new VDomRender();//渲染dom
 
     this.init();
-    this.loadRule();
   }
 
-  /**初始化左側元件 */
+  /**初始化 */
   init() {
     const iframe = document.querySelector("iframe");
-    iframe.srcdoc = '<html><head><style>.follow {position:relative;}.follow:before {content:"";position:absolute;top:0;left: 0;right:0;bottom:0;box-shadow: 0 0 0 2px red;}</style></head><body><div id="container" style="height:100vh"></div></body></html>';
+    iframe.srcdoc = '<html><head><style>.follow {position:relative;}.follow:before {content:"";position:absolute;top:0;left: 0;right:0;bottom:0;box-shadow: 0 0 0 2px red;}</style></head><body><div id="container" style="min-height:100vh"></div></body></html>';
     iframe.onload = () => {
       this.container = iframe.contentDocument.querySelector("#container");
-      this.addEvent();
+      this.addEvent(2);
     }
 
-    let comWrap = document.querySelector("#comWrap");
-    let xhr = new XMLHttpRequest();
-    xhr.open("get", "./test.json");
-    xhr.onload = () => {
-      this.comInfo = JSON.parse(xhr.response);
+
+    //載入元件區
+    this.loadComponent();
+
+    //載入元件可以修改的規則
+    this.loadAjaxData("get", "./editRule.json", (data) => {
+      this.rule = JSON.parse(data).rule;
+    });
+  }
+
+  //載入元件區
+  loadComponent() {
+    const head = document.querySelector("head");
+    const style = document.createElement("style");
+
+    this.loadAjaxData("get", "./test.json", (data) => {
+      this.comInfo = JSON.parse(data);
       let str = "";
       if (this.comInfo.length > 0) {
         this.comInfo.forEach((item) => {
           str += `<li class="com" draggable="true" data-id="${item.ID}"><span>${item.Name}</span></li>`;
-          //item.HtmlJson = JSON.parse(item.HtmlJson.replace(/(?:\\[rn]|[\r\n]+)+/g, ""));
-          //console.log(item);
-        });
-        comWrap.innerHTML = str;
-        //this.addEvent();
-      }
-    };
-
-    xhr.send();
-  }
-
-  /**載入元件可以修改的規則 */
-  loadRule() {
-    let xhr = new XMLHttpRequest();
-    xhr.open("get", "./editRule.json");
-    xhr.onload = () => {
-      this.rule = JSON.parse(xhr.response).rule;
-    };
-
-    xhr.send();
-  }
-
-  /**元件的事件*/
-  addEvent() {
-    let menuBTN = (this.com.length > 0) ? SystemMenu(this.com) : [];//右鍵系統管理欄按鈕
-
-    for (let item of this.com) {
-      //拖曳開始
-      console.log(item);
-      item.ondragstart = function (e) {
-        e.stopPropagation();
-        console.log(this)
-        e.dataTransfer.setData('text/plain', this.dataset.id);
-        this.style.opacity = 0.5;
-      };
-
-      //拖曳結束
-      item.ondragend = function () {
-        this.style.opacity = 1;
-      };
-
-      //右鍵選單
-      item.addEventListener("contextmenu", function () {
-        menuBTN.forEach(itemBTN => {
-          switch (itemBTN.name) {
-            case "編輯":
-              itemBTN.ele.onclick = () => {
-                //Popup({ url: `/Tools/MoreCOM?ID=${this.dataset.id}` });
-              };
-              break;
-
-            case "刪除":
-              itemBTN.ele.onclick = () => {
-                //AlertWindow({ info: "確定刪除?", status: "confirm" }).then(() => {
-                //	ajaxData({ id: this.id }, "/Tools/Delete");
-                //});
-              };
-              break;
+          item.HtmlJson = this.vdom.toVDom(document.createRange().createContextualFragment(item.Html).firstChild);
+          if (item.Css) {
+            style.innerText = item.Css;
+            head.appendChild(style);
+            item.HtmlJson.props.pseudo = this.vdom.pseudoToObject(document.styleSheets[document.styleSheets.length - 1].cssRules);
+            style.remove();
           }
         });
-      });
-    }
+        document.querySelector("#comWrap").innerHTML = str;
+        this.addEvent(1);
+      }
+    });
+  }
 
-    this.container.ondrop = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+  /**
+   * ajax
+   * @param {string} type 類型
+   * @param {string} url 地址
+   * @param {Function} fn load後要執行的方法
+   * @param {{}} data 要傳送的參數
+   */
+  loadAjaxData(type, url, fn, data = null) {
+    const xhr = new XMLHttpRequest();
+    xhr.open(type, url);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onload = () => { fn(xhr.response) };
+    xhr.send(data);
+  }
 
-      if (e.target.dataset.drop === "true" || e.target === this.container) {
-        const that = this;
-        const id = e.dataTransfer.getData('text/plain');
-        let currentCOM = this.comInfo.filter(item => item.ID === id);
+  /**
+   * 事件(暫定這麼寫)
+   * @param {number} type 1是元件區、2是內容區
+   */
+  addEvent(type) {
+    if (type === 1) {
+      //const that = this;
+      let menuBTN = (this.com.length > 0) ? SystemMenu(this.com) : [];//右鍵系統管理欄按鈕
 
-        e.target.style.background = "";
+      for (let item of this.com) {
+        //拖曳開始
+        item.ondragstart = function (e) {
+          e.stopPropagation();
+          e.dataTransfer.setData('text/plain', this.dataset.id);
+          this.style.opacity = 0.5;
+        };
 
-        if (currentCOM.length > 0) {
-          currentCOM = JSON.parse(JSON.stringify(currentCOM[0]));
-          currentCOM.ID = e.target.dataset.id ? e.target.dataset.id + "-" + (e.target.children.length + 1) : e.target.children.length + 1 + "";
-          currentCOM.ele = this.vdom.render(currentCOM.HtmlJson, e.target);
+        //拖曳結束
+        item.ondragend = function () {
+          this.style.opacity = 1;
+        };
 
-          //階層區
-          const layerli = document.createElement("li");
-          layerli.dataset.id = currentCOM.ID;
-          layerli.innerText = currentCOM.Name;
-          layerli.onclick = function () {
-            const htmlJson = that.searchEleJson(this.dataset.id);
-            that.editArea(htmlJson);
+        //右鍵選單
+        //item.removeEventListener("contextmenu");
+        item.addEventListener("contextmenu", function () {
+          menuBTN.forEach(itemBTN => {
+            switch (itemBTN.name) {
+              case "編輯":
+                itemBTN.ele.onclick = () => {
+                  //Popup({ url: `/Tools/MoreCOM2?ID=${item.dataset.id}` });
+                };
+                break;
 
-            that.focus(htmlJson.ele);
-          };
-          this.layerWrap.appendChild(layerli);
-          //this.resetFocus(currentCOM.ele, ((currentCOM.HtmlJson.props.style.width) ? true : false));
+              case "刪除":
+                itemBTN.ele.onclick = () => {
+                  //AlertWindow({ info: "確定刪除?", status: "confirm" }).then(() => {
+                  //  const xhr = new XMLHttpRequest();
+                  //  xhr.open("post", "/Tools/Delete");
+                  //  xhr.setRequestHeader("Content-Type", "application/json");
+                  //  xhr.onload = () => {
+                  //    if (JSON.parse(xhr.response).status > 0) {
+                  //      AlertWindow({ info: "刪除成功", status: "ok" });
+                  //      that.loadComponent();
+                  //    } else {
+                  //      AlertWindow({ info: "刪除失敗", status: "err" });
+                  //    }
+                  //  };
+                  //  xhr.send(JSON.stringify({ id: this.dataset.id }));
+                  //});
+                };
+                break;
+            }
+          });
+        });
+      }
+    } else if (type === 2) {
+      this.container.ondrop = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
 
-          currentCOM.ele.onclick = function (e) {
-            //e.preventDefault();
-            e.stopPropagation();
+        if (e.target.dataset.drop === "true" || e.target === this.container) {
+          const that = this;
+          const id = e.dataTransfer.getData('text/plain');
+          let currentCOM = this.comInfo.filter(item => item.ID === id);
 
-            const htmlJson = that.searchEleJson(this.dataset.id);
-            that.editArea(htmlJson);
+          e.target.style.background = "";
 
-            that.focus(this);
-            return false;
-          };
+          if (currentCOM.length > 0) {
+            currentCOM = JSON.parse(JSON.stringify(currentCOM[0]));
+            currentCOM.ID = e.target.dataset.id ? e.target.dataset.id + "-" + (e.target.children.length + 1) : e.target.children.length + 1 + "";
+            currentCOM.ele = this.vdom.render(currentCOM.HtmlJson, e.target);
 
-          this.pushChildren(currentCOM);
-          //console.log(this.pageCOMs)
+            //階層區
+            const layerli = document.createElement("li");
+            layerli.dataset.id = currentCOM.ID;
+            layerli.innerText = currentCOM.Name;
+            layerli.onclick = function () {
+              const htmlJson = that.searchEleJson(this.dataset.id);
+              that.editArea(htmlJson);
+
+              that.focus(htmlJson.ele);
+            };
+            this.layerWrap.appendChild(layerli);
+
+            currentCOM.ele.onclick = function (e) {
+              //e.preventDefault();
+              e.stopPropagation();
+              console.log(this)
+
+              const htmlJson = that.searchEleJson(this.dataset.id);
+              that.editArea(htmlJson);
+
+              that.focus(this);
+              //console.log(that.vdom.toVDom(this));
+              return false;
+            };
+
+            this.pushChildren(currentCOM);
+            console.log(this.pageCOMs)
+          }
         }
-      }
-    };
+      };
 
-    this.container.ondragenter = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (e.target.dataset.drop === "true" || e.target === this.container) {
-        e.target.style.background = "#eee";
-      }
+      this.container.ondragenter = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.target.dataset.drop === "true" || e.target === this.container) {
+          e.target.style.background = "#eee";
+        }
 
-      if (this.currentFollow !== null) {
-        this.currentFollow.classList.toggle("follow");
-        this.currentFollow = null;
-        this.editWrap.innerHTML = "";
-      }
-    };
+        if (this.currentFollow !== null) {
+          this.currentFollow.classList.toggle("follow");
+          this.currentFollow = null;
+          this.editWrap.innerHTML = "";
+        }
+      };
 
-    this.container.ondragleave = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (e.target.dataset.drop === "true" || e.target === this.container) {
-        e.target.style.background = "";
-      }
-    };
+      this.container.ondragleave = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.target.dataset.drop === "true" || e.target === this.container) {
+          e.target.style.background = "";
+        }
+      };
 
-    this.container.ondragover = function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    };
+      this.container.ondragover = function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      };
+    }
   }
 
   /**
    * 放入到頁面所有元件或父元素的htmljson裡
-   * @param {Object} currentCOM 當前的元件
+   * @param {{}} currentCOM 當前的元件
    */
   pushChildren(currentCOM) {
     let parent = null, level = currentCOM.ID.split("-");
@@ -188,7 +223,7 @@
     } else {
       this.pageCOMs.push(currentCOM);
     }
-    console.log(this.pageCOMs)
+    //console.log(this.pageCOMs)
   }
 
   /**
@@ -233,36 +268,8 @@
   }
 
   /**
-   * 關注元素的框框display(主要是塊元素)
-   * @param {Object} who 被關注的元素
-   * @param {boolean} hasValue 被關注的元素的主元素是否有寬
-   */
-  resetFocus(who, hasValue) {
-    switch (getComputedStyle(who).display) {
-      //case "block":
-      //	if (hasValue) {
-      //		who.style.display = "table";
-      //	} else {
-      //		who.style.display = getComputedStyle(who).display;
-      //	}
-      //	break;
-
-      //case "inline":
-      //	who.style.display = "inline-block";
-      //	break;
-
-      //case "flex":
-      //	who.style.display = "block";
-      //	break;
-
-      default:
-        who.style.display = getComputedStyle(who).display;
-    }
-  }
-
-  /**
   * 屬性編輯區
-  * @param {Object} data 元素的JSON資料
+  * @param {{}} data 元素的JSON資料
   */
   editArea(data) {
     let rule = this.rule.filter(item => item.type === data.HtmlJson.ele)[0];
@@ -270,10 +277,10 @@
       this.editWrap.innerHTML = "";
       return;
     }
-    if (data.HtmlJson.props.attr === undefined) {
+    if ("attr" in data.HtmlJson.props) {
       data.HtmlJson.props.attr = {};
     }
-    if (data.HtmlJson.props.style === undefined) {
+    if ("style" in data.HtmlJson.props) {
       data.HtmlJson.props.style = {};
     }
     //編輯區生成
@@ -314,21 +321,23 @@
           data.HtmlJson.props.attr[e.target.name] = e.target.value;
         } else if (e.target.dataset.type === "style") {
           let styleName = e.target.name.split("-");
+
           if (styleName.length > 1) {
             styleName = styleName[0] + styleName[1].slice(0, 1).toUpperCase() + styleName[1].slice(1);
           } else {
             styleName = styleName[0];
           }
+
           data.ele.style[styleName] = e.target.value;
           data.HtmlJson.props.style[e.target.name] = e.target.value;
+
           if (e.target.name === "width") {
             data.ele.style.setProperty("--w", e.target.value);
-            this.resetFocus(data.ele, (e.target.value ? true : false));
           }
+
           if (e.target.name === "height") {
             data.ele.style.setProperty("--h", e.target.value);
           }
-          console.log(data.ele.offsetWidth)
         } else if (e.target.dataset.type === "drop") {
           data.ele.dataset.drop = e.target.checked;
         }
