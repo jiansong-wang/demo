@@ -2,13 +2,13 @@
   {
     "ID": "bcd9c629-aa59-45e3-925e-dc0b2c7d4792",
     "Name": "超連結",
-    "Html": '<a href="#" style="color:#000">超連結</a>',
+    "Html": "<a href='#' style='color:#000'>超連結</a>",
     "Css": null
   },
   {
     "ID": "fc2ce1be-dc26-46b3-a5c1-3638550a29fd",
     "Name": "按鈕1",
-    "Html": '<button class="_test" style="position:relative;padding:10px;background-color:rgb(61,209,231);border:0px solid rgb(229,231,235);box-sizing:border-box;color:rgb(0,0,0);margin:5px;outline:none;cursor:pointer;">按鈕1</button>',
+    "Html": "<button class='_test' style='position:relative;padding:10px;background-color:rgb(61,209,231);border:0px solid rgb(229,231,235);box-sizing:border-box;color:rgb(0,0,0);margin:5px;outline:none;cursor:pointer;'>按鈕1</button>",
     "Css": "._test:after{content:\u0027\u0027;position:absolute;border:1px solid #000;bottom:3px;left:3px;width:calc(100% - 1px);height:calc(100% - 1px);}._test:hover:after{bottom:1px;left:1px;}"
   }
 ]
