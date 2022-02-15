@@ -21,7 +21,8 @@
 					"font-size": ""
 				}
 			],
-			"pseudo": []
+			"pseudo": [],
+			"isDrop": false
 		},
 		{
 			"type": "div",
@@ -46,6 +47,25 @@
 			],
 			"pseudo": [],
 			"isDrop": false
+		},
+		{
+			"type": "input",
+			"attr": [
+				{
+					"name": "類型",
+					"type": [ "text", "password", "button", "hidden", "file", "checkbox", "radio", "reset", "submit" ]
+				},
+				{
+					"name": "值",
+					"value": ""
+				},
+				{
+					"name": "提示訊息",
+					"placeholder": ""
+				}
+			],
+			"style": [],
+			"pseudo": []
 		}
 	]
 }

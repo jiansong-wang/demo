@@ -1,14 +1,30 @@
 [
   {
+    "RuleType": "a",
     "ID": "bcd9c629-aa59-45e3-925e-dc0b2c7d4792",
     "Name": "超連結",
     "Html": "<a href='#' style='color:#000'>超連結</a>",
     "Css": null
   },
   {
+    "RuleType": "button1",
     "ID": "fc2ce1be-dc26-46b3-a5c1-3638550a29fd",
     "Name": "按鈕1",
     "Html": "<button class='_test' style='position:relative;padding:10px;background-color:rgb(61,209,231);border:0px solid rgb(229,231,235);box-sizing:border-box;color:rgb(0,0,0);margin:5px;outline:none;cursor:pointer;'>按鈕1</button>",
     "Css": "._test:after{content:\u0027\u0027;position:absolute;border:1px solid #000;bottom:3px;left:3px;width:calc(100% - 1px);height:calc(100% - 1px);}._test:hover:after{bottom:1px;left:1px;}"
+  },
+  {
+    "RuleType": "div",
+    "ID": "e5a3dd18-1d49-444f-b8fd-62427f6d829f",
+    "Name": "內容",
+    "Html": "<div style='min-height:50px;border:1px solid'></div>",
+    "Css": null
+  },
+  {
+    "RuleType": "input",
+    "ID": "6322dde4-d2e8-422d-af9d-a2330c54317c",
+    "Name": "input",
+    "Html": "<input type='text'/>",
+    "Css": null
   }
 ]

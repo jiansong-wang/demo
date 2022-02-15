@@ -1,4 +1,4 @@
-﻿class WebEdit {
+﻿class Drag {
   constructor() {
     this.container = null;//內容區
     this.editWrap = document.querySelector("#editWrap");//編輯區
@@ -18,12 +18,11 @@
   /**初始化 */
   init() {
     const iframe = document.querySelector("iframe");
-    iframe.srcdoc = '<html><head><style>.follow {position:relative;}.follow:before {content:"";position:absolute;top:0;left: 0;right:0;bottom:0;box-shadow: 0 0 0 2px red;}</style></head><body><div id="container" style="min-height:100vh"></div></body></html>';
+    iframe.srcdoc = '<html><head><style>.follow {position:relative;}.follow:before {content:"";position:absolute;top:0;left: 0;right:0;bottom:0;box-shadow: 0 0 0 2px red;pointer-events: none;}</style></head><body><div id="container" style="min-height:100vh"></div></body></html>';
     iframe.onload = () => {
       this.container = iframe.contentDocument.querySelector("#container");
       this.addEvent(2);
     }
-
 
     //載入元件區
     this.loadComponent();
@@ -110,18 +109,18 @@
               case "刪除":
                 itemBTN.ele.onclick = () => {
                   //AlertWindow({ info: "確定刪除?", status: "confirm" }).then(() => {
-                  //  const xhr = new XMLHttpRequest();
-                  //  xhr.open("post", "/Tools/Delete");
-                  //  xhr.setRequestHeader("Content-Type", "application/json");
-                  //  xhr.onload = () => {
-                  //    if (JSON.parse(xhr.response).status > 0) {
-                  //      AlertWindow({ info: "刪除成功", status: "ok" });
-                  //      that.loadComponent();
-                  //    } else {
-                  //      AlertWindow({ info: "刪除失敗", status: "err" });
-                  //    }
-                  //  };
-                  //  xhr.send(JSON.stringify({ id: this.dataset.id }));
+                  //	const xhr = new XMLHttpRequest();
+                  //	xhr.open("post", "/Tools/Delete");
+                  //	xhr.setRequestHeader("Content-Type", "application/json");
+                  //	xhr.onload = () => {
+                  //		if (JSON.parse(xhr.response).status > 0) {
+                  //			AlertWindow({ info: "刪除成功", status: "ok" });
+                  //			//that.loadComponent();
+                  //		} else {
+                  //			AlertWindow({ info: "刪除失敗", status: "err" });
+                  //		}
+                  //	};
+                  //	xhr.send(JSON.stringify({ id: this.dataset.id }));
                   //});
                 };
                 break;
@@ -159,20 +158,19 @@
             this.layerWrap.appendChild(layerli);
 
             currentCOM.ele.onclick = function (e) {
-              //e.preventDefault();
+              e.preventDefault();
               e.stopPropagation();
-              console.log(this)
+              //console.log(this)
 
               const htmlJson = that.searchEleJson(this.dataset.id);
               that.editArea(htmlJson);
 
               that.focus(this);
-              //console.log(that.vdom.toVDom(this));
               return false;
             };
 
             this.pushChildren(currentCOM);
-            console.log(this.pageCOMs)
+            //console.log(this.pageCOMs)
           }
         }
       };
@@ -214,10 +212,12 @@
     let parent = null, level = currentCOM.ID.split("-");
 
     if (level.length > 1) {
-      do {
-        parent = this.pageCOMs[level[0] - 1];
+      parent = this.pageCOMs[level[0] - 1];
+      level.shift();
+      while (level.length > 1) {
+        parent = parent.HtmlJson.children[level[0] - 1];
         level.shift();
-      } while (level.length > 1);
+      }
 
       parent.HtmlJson.children.push(currentCOM);
     } else {
@@ -232,7 +232,7 @@
    */
   searchEleJson(id) {
     let node, list = [...this.pageCOMs], val;
-    while (node = list.shift()) {
+    while ((node = list.shift())) {
       if (val !== undefined) {
         return val;
       } else if (typeof node === "object" && val === undefined) {
@@ -272,15 +272,15 @@
   * @param {{}} data 元素的JSON資料
   */
   editArea(data) {
-    let rule = this.rule.filter(item => item.type === data.HtmlJson.ele)[0];
+    let rule = this.rule.filter(item => item.type === data.RuleType)[0];
     if (rule === undefined) {
       this.editWrap.innerHTML = "";
       return;
     }
-    if ("attr" in data.HtmlJson.props) {
+    if (!("attr" in data.HtmlJson.props)) {
       data.HtmlJson.props.attr = {};
     }
-    if ("style" in data.HtmlJson.props) {
+    if (!("style" in data.HtmlJson.props)) {
       data.HtmlJson.props.style = {};
     }
     //編輯區生成
@@ -292,8 +292,8 @@
       attrStr += `<div><label>${item.name}：</label>`;
       if (Array.isArray(item[Object.keys(item)[1]])) {
         attrStr += `<select name="${Object.keys(item)[1]}">`;
-        item[Object.keys(item)[1]].forEach(item => {
-          attrStr += `<option value="${item}" ${(item === val) ? "selected" : ""}>${item}</option>`;
+        item[Object.keys(item)[1]].forEach(v => {
+          attrStr += `<option value="${v}" ${(v === val) ? "selected" : ""}>${v}</option>`;
         });
         attrStr += "</select></div>";
       } else {
@@ -317,8 +317,13 @@
     for (let i = 0; i < this.inputs.length; i++) {
       this.inputs[i].onchange = (e) => {
         if (e.target.dataset.type === "attr") {
-          data.ele[e.target.name] = e.target.value;
-          data.HtmlJson.props.attr[e.target.name] = e.target.value;
+          if (e.target.value !== "") {
+            data.ele[e.target.name] = e.target.value;
+            data.HtmlJson.props.attr[e.target.name] = e.target.value;
+          } else {
+            data.ele.removeAttribute(e.target.name);
+            delete data.HtmlJson.props.attr[e.target.name];
+          }
         } else if (e.target.dataset.type === "style") {
           let styleName = e.target.name.split("-");
 
@@ -348,10 +353,9 @@
       this.selects[i].onchange = (e) => {
         data.ele[e.target.name] = e.target.value;
         data.HtmlJson.props.attr[e.target.name] = e.target.value;
-        data.ele.click();
       };
     }
   }
 }
 
-new WebEdit();
+new Drag();
