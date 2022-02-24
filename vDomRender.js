@@ -43,7 +43,7 @@ class VDomRender {
 		} else if (this.isElementVdom(vdom)) {
 			const dom = document.createElement(vdom.ele);//主要元素
 			if (vdom.ele === "input") {
-				dom.readOnly = true;
+				dom.readOnly = "readOnly";
 			}
 			vdom.props.attr["data-id"] = (parent.dataset.id) ? parent.dataset.id + "-" + (parent.children.length + 1) : parent.children.length + 1;
 			dom.dataset.id = vdom.props.attr["data-id"];
@@ -158,3 +158,5 @@ class VDomRender {
 		return pseudo;
 	}
 }
+
+export default VDomRender;

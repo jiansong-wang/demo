@@ -8,13 +8,13 @@
 
 		menu.id = "systemMenu";
 		menu.setAttribute("style","position:fixed;width:180px;padding:0.25em;background-color:#fff;border:1px solid #bebebe;border-radius:0.2em;box-shadow:0 2px 5px rgb(0 0 0/50%);")
-		menu.innerHTML = "<style>#systemMenu li{padding:5px;list-style:none;cursor:pointer;}#systemMenu li:hover{background-color:#eee;}</style><ul style='padding:0;margin:0;'><li>編輯</li><li>刪除</li></ul>";
+		menu.innerHTML = "<style>#systemMenu li{padding:5px;list-style:none;cursor:pointer;}#systemMenu li:hover{background-color:#eee;}</style><ul style='padding:0;margin:0;'><li data-typeBTN='edit'>編輯</li><li data-typeBTN='delete'>刪除</li></ul>";
 
 		var menuOption = menu.querySelectorAll("li");
-		menuBTN=Object.keys(menuOption).map(function (key) {
+		menuBTN = Object.keys(menuOption).map(function (key) {
 			return {
-				name: menuOption[key].outerText,
-				ele: menuOption[key]
+				type: menuOption[key].dataset.typebtn,
+				ele: menuOption[key],
 			}
 		});
 

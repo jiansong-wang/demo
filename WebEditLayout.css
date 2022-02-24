@@ -1,0 +1,108 @@
+﻿.webEditLayout {
+	display: flex;
+	user-select: none;
+}
+
+.webEditLayout h5 {
+	font-size: 18px;
+}
+
+.webEditLayout .headerWrap {
+	padding: 5px 10px;
+	border-bottom: 1px solid #ccc;
+}
+
+.webEditLayout .bodyWrap {
+	padding: 10px;
+}
+
+.webEditLayout .windowInfo {
+	position: relative;
+	padding: 10px;
+}
+
+/*	左邊*/
+.webEditLayout > aside {
+	flex: 0 0 200px;
+	max-height: 100vh;
+	border: 1px solid #ccc;
+	box-shadow: 2px 0 5px rgb(0 0 0/50%);
+}
+
+.webEditLayout .add > button {
+	width: 100%;
+	height: 30px;
+	margin-bottom: 5px;
+}
+
+.webEditLayout > aside .comWrap {
+	display: flex;
+	flex-wrap: wrap;
+	padding: 10px;
+}
+
+.webEditLayout .comWrap .com {
+	flex: 0 0 33.334%;
+	height: 50px;
+	text-align: center;
+	border: 1px solid;
+	cursor: grab;
+}
+
+	.webEditLayout .comWrap .com:active {
+		cursor: grabbing;
+	}
+
+/*	中間*/
+.webEditLayout > main {
+	display:flex;
+	flex-direction:column;
+	min-width: 320px;
+	width: 100%;
+	height: 100vh;
+	overflow: auto;
+}
+
+	.webEditLayout > main iframe {
+		width:inherit;
+		height: inherit;
+	}
+		.webEditLayout > main section {
+		width: 1920px;
+		height: 100%;
+	}
+
+/*	右邊*/
+.webEditLayout .setUp {
+	display: flex;
+	flex-direction: column;
+	flex: 0 0 15%;
+	min-width: 200px;
+	height: 100vh;
+	box-shadow: -2px 0 5px rgb(0 0 0/50%);
+	box-sizing: border-box;
+}
+
+.webEditLayout .attrWrap {
+	height: 100%;
+	border: 1px solid #ccc;
+}
+
+.webEditLayout .layerWrap {
+	margin-top: auto;
+	border: 1px solid #ccc;
+}
+
+	.webEditLayout .layerWrap ul {
+		height: 320px;
+		overflow-y: auto;
+	}
+
+	.webEditLayout .layerWrap li {
+		list-style: none;
+		cursor: pointer;
+	}
+
+		.webEditLayout .layerWrap li:hover {
+			background-color: #eee;
+		}

@@ -7,11 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
-    <link rel="stylesheet" href="./COMLayout.css" />
+    <link rel="stylesheet" href="./init.css" />
+    <link rel="stylesheet" href="./WebEditLayout.css" />
   </head>
 
   <body>
-    <div class="COMLayout">
+    <div class="webEditLayout">
       <aside>
         <div class="headerWrap">
           <h5>元件區</h5>
@@ -19,7 +20,7 @@
 
         <div class="bodyWrap">
           <div class="add">
-            <button onclick="">+</button>
+            <button onclick="" id="addBTN">+</button>
           </div>
 
           <ul class="comWrap" id="comWrap"></ul>
@@ -27,10 +28,10 @@
       </aside>
 
       <main>
-        <p class="windowInfo">比例:1</p>
+        <p class="windowInfo">寬：1920px 比例：1</p>
 
         <section>
-          <iframe allowfullscreen="true" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+          <iframe allowfullscreen="true"></iframe>
         </section>
       </main>
 
@@ -58,8 +59,7 @@
     </div>
 
     <script src="./SystemMenu.js"></script>
-    <script src="./vDomRender.js"></script>
-    <script src="./main.js"></script>
+    <script src="./bundle.js"></script>
   </body>
 
 </html>
