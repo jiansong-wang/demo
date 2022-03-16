@@ -2,68 +2,25 @@
 	"rule": [
 		{
 			"type": "a",
-			"attr": [
-				{
-					"name": "連結",
-					"href": ""
-				},
-				{
-					"name": "開啟方式",
-					"target": [
-						"_self ",
-						"_blank "
-					]
-				}
-			],
-			"style": [
-				{
-					"name": "字體大小(需輸入單位)",
-					"font-size": ""
-				}
-			],
+			"attr": [ "href", "target" ],
+			"style": [ "font-size","color" ],
 			"pseudo": [],
+			"other": {
+				"attr": [ "href", "target", "download" ],
+				"style": []
+			},
 			"isDrop": false
 		},
 		{
 			"type": "div",
 			"attr": [],
-			"style": [
-				{
-					"name": "寬",
-					"width": ""
-				},
-				{
-					"name": "高",
-					"height": ""
-				},
-				{
-					"name": "內邊距",
-					"padding": ""
-				},
-				{
-					"name": "外邊距",
-					"margin": ""
-				}
-			],
+			"style": [ "width", "height", "padding", "margin", "border" ],
 			"pseudo": [],
 			"isDrop": false
 		},
 		{
 			"type": "input",
-			"attr": [
-				{
-					"name": "類型",
-					"type": [ "text", "password", "button", "hidden", "file", "checkbox", "radio", "reset", "submit" ]
-				},
-				{
-					"name": "值",
-					"value": ""
-				},
-				{
-					"name": "提示訊息",
-					"placeholder": ""
-				}
-			],
+			"attr": [ "id", "type", "value", "placeholder" ],
 			"style": [],
 			"pseudo": []
 		}

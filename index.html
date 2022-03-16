@@ -13,53 +13,79 @@
 
   <body>
     <div class="webEditLayout">
-      <aside>
-        <div class="headerWrap">
-          <h5>元件區</h5>
-        </div>
-
-        <div class="bodyWrap">
-          <div class="add">
-            <button onclick="" id="addBTN">+</button>
-          </div>
-
-          <ul class="comWrap" id="comWrap"></ul>
-        </div>
-      </aside>
+      <header>
+        <nav>
+          <ul>
+            <li>檔案</li>
+            <li>編輯</li>
+            <li>視窗</li>
+            <li>說明</li>
+          </ul>
+        </nav>
+      </header>
+      <hr class="hrBorder">
 
       <main>
-        <p class="windowInfo">寬：1920px 比例：1</p>
+        <aside class="area comArea">
+          <div class="headerWrap">
+            <ul class="tab">
+              <li>元件</li>
+            </ul>
+          </div>
+          <hr class="hrBorder">
 
-        <section>
-          <iframe allowfullscreen="true"></iframe>
+          <div class="bodyWrap">
+            <ul class="comWrap" id="comWrap"></ul>
+          </div>
+          <button class="addCom">+</button>
+          <hr class="hrBorder">
+        </aside>
+
+        <section class="designArea">
+          <div>
+            <iframe allowfullscreen="true"></iframe>
+          </div>
         </section>
+
+        <div class="editWrap">
+          <section class="area setUpArea">
+            <div class="headerWrap">
+              <ul class="tab">
+                <li class="active" data-tab="attr">屬性</li>
+                <li data-tab="style">樣式</li>
+              </ul>
+            </div>
+            <hr class="hrBorder">
+
+            <div class="bodyWrap">
+              <div id="editWrap">
+                <div id="attr"></div>
+                <div id="style" class="closed"></div>
+              </div>
+            </div>
+            <hr class="hrBorder">
+          </section>
+
+          <section class="area layerArea">
+            <div class="headerWrap">
+              <ul class="tab">
+                <li>階層</li>
+              </ul>
+            </div>
+            <hr class="hrBorder">
+
+            <div class="bodyWrap">
+              <ul id="layer"></ul>
+            </div>
+            <hr class="hrBorder">
+          </section>
+        </div>
+
       </main>
-
-      <section class="setUp">
-        <div class="attrWrap">
-          <div class="headerWrap">
-            <h5>屬性</h5>
-          </div>
-
-          <div class="bodyWrap">
-            <div id="editWrap"></div>
-          </div>
-        </div>
-        <div class="layerWrap">
-          <div class="headerWrap">
-            <h5>階層</h5>
-          </div>
-
-          <div class="bodyWrap">
-            <ul id="layer"></ul>
-          </div>
-        </div>
-      </section>
-
     </div>
 
     <script src="./SystemMenu.js"></script>
-    <script src="./bundle.js"></script>
+    <script type="module" src="./main.js"></script>
   </body>
 
 </html>

@@ -1,7 +1,7 @@
 ﻿* {
 	padding: 0;
 	margin: 0;
-	box-sizing:border-box;
+	box-sizing: border-box;
 }
 
 li {
@@ -23,6 +23,9 @@ img {
 }
 
 button {
+	background-color: transparent;
+	border: 0;
+	outline: none;
 	cursor: pointer;
 }
 
@@ -31,22 +34,6 @@ button {
 	margin: auto;
 }
 
-#systemMenu {
+.closed {
 	display: none;
-	position: fixed;
-	width: 180px;
-	padding: 0.25em;
-	background-color: #fff;
-	border: 1px solid #bebebe;
-	border-radius: 0.2em;
-	box-shadow: 0 2px 5px rgb(0 0 0/50%);
 }
-
-	#systemMenu li {
-		padding: 5px;
-		cursor: pointer;
-	}
-
-		#systemMenu li:hover {
-			background-color: #eee;
-		}

@@ -1,0 +1,108 @@
+{
+	"TW": {
+		"attr": {
+			"href": {
+				"name": "連結",
+				"value": ""
+			},
+			"target": {
+				"name": "開啟方式",
+				"value": [
+					"_self ",
+					"_blank "
+				]
+			},
+			"id": {
+				"name": "ID",
+				"value": ""
+			},
+			"name": {
+				"name": "名稱",
+				"value": ""
+			},
+			"value": {
+				"name": "值",
+				"value": ""
+			},
+			"placeholder": {
+				"name": "提示訊息",
+				"value": ""
+			},
+			"type": {
+				"name": "類型",
+				"value": [
+					"text",
+					"password",
+					"button",
+					"hidden",
+					"file",
+					"checkbox",
+					"radio",
+					"reset",
+					"submit"
+				]
+			},
+			"autocomplete": {
+				"name": "自動完成",
+				"value": "off"
+			},
+			"method": {
+				"name": "HTTP協議",
+				"value": [
+					"get",
+					"post"
+				]
+			},
+			"action": {
+				"name": "位址URL",
+				"value": ""
+			},
+			"title": {
+				"name": "額外信息",
+				"value": ""
+			},
+			"alt": {
+				"name": "圖片的替代文本",
+				"value": ""
+			},
+			"src": {
+				"name": "位址URL",
+				"value": ""
+			},
+			"download": {
+				"name": "下載目標檔名",
+				"value": ""
+			}
+		},
+		"style": {
+			"width": {
+				"name": "寬",
+				"tip": "10px"
+			},
+			"height": {
+				"name": "高",
+				"tip": "10px"
+			},
+			"padding": {
+				"name": "內邊距",
+				"tip": "10px"
+			},
+			"margin": {
+				"name": "外邊距",
+				"tip": "10px"
+			},
+			"font-size": {
+				"name": "字體大小",
+				"tip": "16px"
+			},
+			"border": {
+				"name": "四邊邊框",
+				"tip": "1px solid #000"
+			},
+			"color": {
+				"name": "顏色",
+				"tip": "#000"
+			}
+		}
+	}
+}

@@ -15,11 +15,10 @@ class WebEdit {
   /**初始化 */
   init() {
     const iframe = document.querySelector("iframe");
-    iframe.srcdoc = '<html><head><style>.follow {outline: 2px dashed red !important;}</style></head><body><div id="container" style="min-height:100vh"></div></body></html>';
-    iframe.onload = () => {
-      this.container = iframe.contentDocument.querySelector("#container");
-      this.addEvent(2);
-    }
+    iframe.contentDocument.querySelector("head").innerHTML += "<style>.follow {outline: 2px dashed red !important;}</style>";
+    iframe.contentDocument.body.innerHTML += '<div id="container" style="min-height: 100vh"></div>';
+    this.container = iframe.contentDocument.querySelector("#container");
+    this.addEvent(2);
 
     //載入元件區
     this.com.load().then(() => this.addEvent(1));
@@ -52,15 +51,15 @@ class WebEdit {
           menuBTN.forEach(itemBTN => {
             switch (itemBTN.type) {
               case "edit":
-                itemBTN.ele.onclick = () => {
-                  //Popup({ url: `/WebEdit/MoreCOM?ID=${this.dataset.id}` });
-                };
+                //itemBTN.ele.onclick = () => {
+                //	Popup({ url: `/WebEdit/MoreCOM?ID=${this.dataset.id}` });
+                //};
                 break;
 
               case "delete":
-                itemBTN.ele.onclick = () => {
-                  //AlertWindow({ info: "確定刪除?", status: "confirm" }).then(() => that.com.delete(this));
-                };
+                //itemBTN.ele.onclick = () => {
+                //	AlertWindow({ info: "確定刪除?", status: "confirm" }).then(() => that.com.delete(this));
+                //};
                 break;
             }
           });
@@ -94,7 +93,7 @@ class WebEdit {
             //階層區
             const layerli = document.createElement("li");
             layerli.dataset.id = currentCOM.ID;
-            layerli.innerText = currentCOM.Name;
+            layerli.innerHTML = currentCOM.Name + '<div class="see"><input type="checkbox"></div>';
             layerli.onclick = (e) => {
               const htmlJson = this.searchEleJson(e.target.dataset.id);
               this.editArea.load(htmlJson);
@@ -168,7 +167,7 @@ class WebEdit {
     } else {
       this.pageCOMs.push(currentCOM);
     }
-    console.log(this.pageCOMs)
+    //console.log(this.pageCOMs)
   }
 
   /**
@@ -240,7 +239,7 @@ class Component {
 
           if (this.data.length > 0) {
             this.data.forEach((item) => {
-              str += `<li class="com" draggable="true" data-id="${item.ID}"><span>${item.Name}</span></li>`;
+              str += `<li class="com" draggable="true" data-id="${item.ID}">${item.Name}</li>`;
               item.HtmlJson = this.vdom.toVDom(document.createRange().createContextualFragment(item.Html).firstChild);
               if (item.Css) {
                 style.innerText = item.Css;
@@ -260,39 +259,39 @@ class Component {
 
   /**更新元件區 */
   update() {
-    return new Promise((res) => {
-      const head = document.querySelector("head");
-      const style = document.createElement("style");
+    //return new Promise((res) => {
+    //	const head = document.querySelector("head");
+    //	const style = document.createElement("style");
 
-      Ajax.conn({
-        type: "get",
-        url: "./test.json",
-        fn: (result) => {
-          let data = JSON.parse(result);
-          let str = "";
+    //	Ajax.conn({
+    //		type: "get",
+    //		url: "/WebEdit/Aside",
+    //		fn: (result) => {
+    //			let data = JSON.parse(result);
+    //			let str = "";
 
-          if (data.length > 0) {
-            data = data.filter(item => this.data.indexOf(item.ID) === -1);
+    //			if (data.length > 0) {
+    //				data = data.filter(item => this.data.indexOf(item.ID) === -1);
 
-            data.forEach((item) => {
-              str += `<li class="com" draggable="true" data-id="${item.ID}">${item.Name}</li>`;
-              item.HtmlJson = this.vdom.toVDom(document.createRange().createContextualFragment(item.Html).firstChild);
-              if (item.Css) {
-                style.innerText = item.Css;
-                head.appendChild(style);
-                item.HtmlJson.props.pseudo = this.vdom.pseudoToObject(document.styleSheets[document.styleSheets.length - 1].cssRules);
-                style.remove();
-              }
+    //				data.forEach((item) => {
+    //					str += `<li class="com" draggable="true" data-id="${item.ID}">${item.Name}</li>`;
+    //					item.HtmlJson = this.vdom.toVDom(document.createRange().createContextualFragment(item.Html).firstChild);
+    //					if (item.Css) {
+    //						style.innerText = item.Css;
+    //						head.appendChild(style);
+    //						item.HtmlJson.props.pseudo = this.vdom.pseudoToObject(document.styleSheets[document.styleSheets.length - 1].cssRules);
+    //						style.remove();
+    //					}
 
-              this.data.push(item);
-            });
-          }
+    //					this.data.push(item);
+    //				});
+    //			}
 
-          document.querySelector("#comWrap").innerHTML += str;
-          res(data);
-        }
-      });
-    });
+    //			document.querySelector("#comWrap").innerHTML += str;
+    //			res(data);
+    //		}
+    //	});
+    //});
   }
 
   /**
@@ -300,25 +299,25 @@ class Component {
    * @param {Element} ele 要刪除的元素
    */
   delete(ele) {
-    Ajax.conn({
-      type: "post",
-      url: "/WebEdit/Delete",
-      data: { id: ele.dataset.id },
-      fn: (result) => {
-        if (JSON.parse(result).status > 0) {
-          this.data.forEach((item, i) => {
-            if (item.ID === ele.dataset.id) {
-              this.data.splice(i, 0);
-              ele.remove();
-              return;
-            }
-          });
-          AlertWindow({ info: "刪除成功", status: "ok" });
-        } else {
-          AlertWindow({ info: "刪除失敗", status: "err" });
-        }
-      }
-    });
+    //Ajax.conn({
+    //	type: "post",
+    //	url: "/WebEdit/Delete",
+    //	data: { id: ele.dataset.id },
+    //	fn: (result) => {
+    //		if (JSON.parse(result).status > 0) {
+    //			this.data.forEach((item, i) => {
+    //				if (item.ID === ele.dataset.id) {
+    //					this.data.splice(i, 0);
+    //					ele.remove();
+    //					return;
+    //				}
+    //			});
+    //			AlertWindow({ info: "刪除成功", status: "ok" });
+    //		} else {
+    //			AlertWindow({ info: "刪除失敗", status: "err" });
+    //		}
+    //	}
+    //});
   }
 }
 
@@ -328,6 +327,7 @@ class EditArea {
     this.inputs = this.editWrap.getElementsByTagName("input");//編輯區所有輸入框
     this.selects = this.editWrap.getElementsByTagName("select");//編輯區所有選擇框
     this.rule = null;//編輯區元件可以修改的規則
+    this.attrName = null;//編輯區規則中文和預設值
 
     this.init();
   }
@@ -341,6 +341,25 @@ class EditArea {
         this.rule = JSON.parse(result).rule;
       }
     });
+
+    //載入規則中文和預設值
+    Ajax.conn({
+      type: "get",
+      url: "./attrName.json",
+      fn: (result) => {
+        this.attrName = JSON.parse(result).TW;
+      }
+    });
+
+    const tabs = Object.values(document.querySelector(".setUpArea .tab").children);
+    tabs.forEach((item) => {
+      item.onclick = (e) => {
+        tabs.forEach(function (a) { a.className = ""; });
+        Object.values(this.editWrap.children).forEach(function (a) { a.className = "closed"; });
+        e.target.className = "active";
+        document.getElementById(e.target.dataset.tab).className = "";
+      };
+    });
   }
 
   /**
@@ -350,7 +369,7 @@ class EditArea {
   load(data) {
     let rule = this.rule.filter(item => item.type === data.RuleType)[0];
     if (rule === undefined) {
-      this.editWrap.innerHTML = "";
+      this.clear();
       return;
     }
     if (!("attr" in data.HtmlJson.props)) {
@@ -362,32 +381,43 @@ class EditArea {
     //編輯區生成
     let attrStr = "", styleStr = "", otherStr = "";
     rule.attr.forEach(item => {
-      let attrName = Object.keys(data.HtmlJson.props.attr).find(a => a === Object.keys(item)[1]);
+      let attrName = Object.keys(data.HtmlJson.props.attr).find(a => a === item);
       let val = (attrName) ? data.HtmlJson.props.attr[attrName] : "";
 
-      attrStr += `<div><label>${item.name}：</label>`;
-      if (Array.isArray(item[Object.keys(item)[1]])) {
-        attrStr += `<select name="${Object.keys(item)[1]}">`;
-        item[Object.keys(item)[1]].forEach(v => {
+      attrStr += `<div><label>${this.attrName.attr[item].name}：</label>`;
+      if (Array.isArray(this.attrName.attr[item].value)) {
+        attrStr += `<select name="${item}">`;
+        this.attrName.attr[item].value.forEach(v => {
           attrStr += `<option value="${v}" ${(v === val) ? "selected" : ""}>${v}</option>`;
         });
         attrStr += "</select></div>";
       } else {
-        attrStr += `<input type="text" name="${Object.keys(item)[1]}" value="${val}" data-type="attr"/></div>`;
+        attrStr += `<input type="text" name="${item}" value="${val}" data-type="attr"/></div>`;
       }
     });
 
     rule.style.forEach(item => {
-      let styleName = Object.keys(data.HtmlJson.props.style).find(a => a === Object.keys(item)[1]);
-      let val = (styleName) ? data.HtmlJson.props.style[styleName] : "";
-      attrStr += `<div><label>${item.name}：</label><input type="text" name="${Object.keys(item)[1]}" value="${val}" data-type="style"/></div>`;
+      let styleName = Object.keys(data.HtmlJson.props.style).find(a => a === item);//找現已使用的樣式名並在規則可修改的樣式內
+      let val = (styleName) ? data.HtmlJson.props.style[styleName] : "";//是否有使用規則可修改的樣式，有的話取現已使用的樣式值
+
+      styleStr += `<div><label>${(this.attrName.style[item]) ? this.attrName.style[item].name : styleName}：</label>`;
+      if (styleName === "color") {
+        if (/#/.test(val) && val.length === 4) {
+          val += val.substr(1);
+        }
+        styleStr += `<input type="color" name="${item}" value="${val}" data-type="style"/>`;
+      } else {
+        styleStr += `<input type="text" name="${item}" value="${val}" placeholder="${(this.attrName.style[item]) ? this.attrName.style[item].tip : ""}" data-type="style"/>`;
+      }
+      styleStr += "</div>";
     });
 
     if (rule.isDrop !== undefined) {
       otherStr += `<div><label>是否可以嵌套：</label><input type="checkbox" ${(data.ele.dataset.drop === "true" ? "checked" : "")} data-type="drop"/>`;
     }
 
-    this.editWrap.innerHTML = attrStr + styleStr + otherStr;
+    this.editWrap.querySelector("#attr").innerHTML = attrStr + otherStr;
+    this.editWrap.querySelector("#style").innerHTML = styleStr;
 
     //編輯區
     for (let i = 0; i < this.inputs.length; i++) {
@@ -435,7 +465,8 @@ class EditArea {
 
   /**清空編輯面板 */
   clear() {
-    this.editWrap.innerHTML = "";
+    this.editWrap.querySelector("#attr").innerText = "";
+    this.editWrap.querySelector("#style").innerText = "";
   }
 }
 
@@ -451,15 +482,10 @@ class Ajax {
       data = {};
     }
 
-    let xhr = null;
-    if (window.XMLHttpRequest) {
-      xhr = new XMLHttpRequest();
-    } else if (window.ActiveXObject) {
-      xhr = new ActiveXObject("Microsoft.XMLHTTP");
-    }
+    const xhr = new XMLHttpRequest();
     xhr.open(type, url);
     xhr.setRequestHeader("Content-Type", (type === "get") ? "application/x-www-form-urlencoded; charset=utf-8;" : "application/json");
-    xhr.onload = () => { fn(xhr.response) };
+    xhr.onload = () => fn(xhr.response);
     xhr.send((type === "get") ? null : JSON.stringify(data));
   }
 }

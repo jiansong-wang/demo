@@ -1,108 +1,167 @@
-﻿.webEditLayout {
+﻿html {
+	--headerColor: rgb(27, 27, 27);
+	--bodyColor: rgb(46, 46, 46);
+	--hrColor: rgb(56, 56, 56);
+	color: #fff;
+	font-size: 12px;
+}
+
+/*-----------------------------------------------------------*/
+
+.webEditLayout {
 	display: flex;
-	user-select: none;
-}
-
-.webEditLayout h5 {
-	font-size: 18px;
-}
-
-.webEditLayout .headerWrap {
-	padding: 5px 10px;
-	border-bottom: 1px solid #ccc;
-}
-
-.webEditLayout .bodyWrap {
-	padding: 10px;
-}
-
-.webEditLayout .windowInfo {
-	position: relative;
-	padding: 10px;
-}
-
-/*	左邊*/
-.webEditLayout > aside {
-	flex: 0 0 200px;
+	flex-direction: column;
+	height: 100vh;
 	max-height: 100vh;
-	border: 1px solid #ccc;
-	box-shadow: 2px 0 5px rgb(0 0 0/50%);
 }
 
-.webEditLayout .add > button {
+.active {
+	background-color: rgb(83, 83, 83);
+}
+
+.closed {
+	display: none;
+}
+
+.hrBorder {
+	border-width: 1.12px;
+	border-color: var(--hrColor);
+}
+
+.headerWrap {
+	display: flex;
 	width: 100%;
-	height: 30px;
-	margin-bottom: 5px;
+	background-color: var(--headerColor);
 }
 
-.webEditLayout > aside .comWrap {
+.headerWrap > .tab {
+	display: flex;
+	margin-right: auto;
+}
+
+.headerWrap > .tab li {
+	padding: 3px 6.5px;
+	cursor: pointer;
+}
+
+.bodyWrap {
+	flex: 1 1 auto;
+	padding: 5px;
+	font-size: 14px;
+	background-color: var(--bodyColor);
+}
+
+.headerWrap button:hover,
+.comArea .comWrap li:hover,
+header nav > ul li:hover,
+.layerArea .bodyWrap ul li:hover {
+	background-color: rgb(83, 83, 83);
+}
+
+.area {
+	display: flex;
+	flex-direction: column;
+	min-height: 200px;
+	z-index: 2;
+}
+
+header {
+	background-color: #000;
+	z-index: 2;
+}
+
+header nav > ul {
+	display: flex;
+	border-bottom: 1px solid #000;
+}
+
+header nav > ul li {
+	padding: 5px 8px;
+	font-size: 16px;
+	cursor: pointer;
+}
+
+main {
+	flex: 1 1 auto;
+	display: flex;
+	background-color: var(--bodyColor);
+}
+
+.comArea {
+	flex: 0 0 130px;
+	align-items: center;
+	height: 100%;
+	box-shadow: 2px 0 5px rgb(0 0 0/80%);
+}
+
+.comArea .comWrap {
 	display: flex;
 	flex-wrap: wrap;
-	padding: 10px;
 }
 
-.webEditLayout .comWrap .com {
-	flex: 0 0 33.334%;
-	height: 50px;
+.comArea .comWrap li {
+	flex: 0 0 56px;
+	height: 56px;
+	margin: 2px;
 	text-align: center;
-	border: 1px solid;
+	line-height: 60px;
+	border: 1px solid var(--hrColor);
+	border-radius: 5px;
 	cursor: grab;
 }
 
-	.webEditLayout .comWrap .com:active {
-		cursor: grabbing;
-	}
+.comArea .comWrap li:active {
+	cursor: grabbing;
+}
 
-/*	中間*/
-.webEditLayout > main {
-	display:flex;
-	flex-direction:column;
-	min-width: 320px;
-	width: 100%;
-	height: 100vh;
+.comArea .addCom {
+	width: 90%;
+	height: 30px;
+	margin-bottom: 10px;
+	background-color: #eee;
+	border-radius: 5px;
+}
+
+.designArea {
+	flex: 0 1 100%;
 	overflow: auto;
 }
 
-	.webEditLayout > main iframe {
-		width:inherit;
-		height: inherit;
-	}
-		.webEditLayout > main section {
-		width: 1920px;
-		height: 100%;
-	}
+.designArea > div {
+	width: 1920px;
+	height: 100%;
+}
 
-/*	右邊*/
-.webEditLayout .setUp {
+.designArea iframe {
+	width: inherit;
+	height: inherit;
+	background-color: #fff;
+	border: 0;
+}
+
+.editWrap {
 	display: flex;
 	flex-direction: column;
-	flex: 0 0 15%;
+	width: 15%;
 	min-width: 200px;
-	height: 100vh;
-	box-shadow: -2px 0 5px rgb(0 0 0/50%);
-	box-sizing: border-box;
+	box-shadow: -2px 0 5px rgb(0 0 0/80%);
 }
 
-.webEditLayout .attrWrap {
-	height: 100%;
-	border: 1px solid #ccc;
+.setUpArea {
+	flex: 1 1 auto;
 }
 
-.webEditLayout .layerWrap {
-	margin-top: auto;
-	border: 1px solid #ccc;
+.layerArea {
+	flex: 0 0 350px;
 }
 
-	.webEditLayout .layerWrap ul {
-		height: 320px;
-		overflow-y: auto;
-	}
+.layerArea .bodyWrap ul li {
+	display: flex;
+	align-items: center;
+	padding: 5px;
+	cursor: pointer;
+}
 
-	.webEditLayout .layerWrap li {
-		list-style: none;
-		cursor: pointer;
-	}
-
-		.webEditLayout .layerWrap li:hover {
-			background-color: #eee;
-		}
+.layerArea .bodyWrap .see {
+	margin-left: auto;
+}
