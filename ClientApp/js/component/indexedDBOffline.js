@@ -46,7 +46,7 @@
   }
 
   getData() {
-    return fetch("/db.json")
+    return fetch("db.json")
       .then((res) => res.json())
       .then((json) => json)
       .catch((err) => {
