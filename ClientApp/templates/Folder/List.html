@@ -1,0 +1,41 @@
+﻿<section class="appLayout">
+    <nav class="nav"></nav>
+
+    <div class="mainArea">
+        <aside class="slider"></aside>
+
+        <div class="content">
+            <table class="table wrap">
+                <colgroup>
+                    <col class="w50">
+                    <col class="w25">
+                    <col class="w25">
+                </colgroup>
+                <thead class="thead">
+                    <tr>
+                        <th class="name">名稱<span class="colResizer"></span></th>
+                        <th>修改日期<span class="colResizer"></span></th>
+                        <th>類型<span class="colResizer"></span></th>
+                    </tr>
+                </thead>
+                <tbody class="tbody">
+                    {{#each data}}
+                    <tr title="{{name}}" data-href="{{executeURL}}" data-value="{{id}}" data-type="{{type}}" data-click="2" data-w="{{width}}" data-h="{{height}}">
+                        <td class="name">
+                            {{#if icon }}
+                            <img src="{{icon}}" data-icon="img" />
+                            {{#else}}
+                            {{defaultIcon}}
+                            {{/if}}
+                            {{name}}
+                        </td>
+                        <td>{{updateDate}}</td>
+                        <td>{{typeText}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</section>
