@@ -5,9 +5,9 @@ import TemplateEngine from "../js/component/TemplateEngine.js";
 Ajax.conn({
     type: "get", url: "/api/Home/DesktopList", fn: async (res) => {
         //console.log(res);
-        const html = await TemplateEngine.view("/templates/home.html", res.returnData);
+        const html = await TemplateEngine.view("./templates/home.html", res.returnData);
         document.querySelector("#desktop>main").innerHTML = html;
-        import("/js/desktop.js");
+        import("./js/desktop.js");
     }
 });
 
