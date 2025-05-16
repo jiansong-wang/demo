@@ -89,7 +89,7 @@
         returnCode: 200,
         returnMsg: "success",
         returnData: { data: result },
-        js: "Music"
+        js: "music"
       };
     };
 
