@@ -84,8 +84,8 @@ class IframeWindow {
 
                         try {
                             //console.log(res);
-                            const layoutHtml = await TemplateEngine.view("/templates/windowLayout.html", data);
-                            const html = await TemplateEngine.view(`${target.dataset.href.replace("api", "templates")}.html`, res.returnData);
+                            const layoutHtml = await TemplateEngine.view("./templates/windowLayout.html", data);
+                            const html = await TemplateEngine.view(`${target.dataset.href.replace("/api", "./templates")}.html`, res.returnData);
                             const randomId = crypto.getRandomValues(new Uint32Array(1))[0];
                             let frag = document.createRange().createContextualFragment(layoutHtml);
                             //console.log(html, frag.firstChild);
