@@ -5,7 +5,7 @@ class IndexedDBOffline {
   constructor() {
     this.api = {};
     this._initialized = false;
-
+    this.dbVersion = 2;
     this.ready = this.init();
     this.registerAPI();
   }
@@ -16,7 +16,7 @@ class IndexedDBOffline {
 
     const dbData = await this.getData();
     if (!dbData) return;
-    const req = indexedDB.open("DesktopDB", 1);
+    const req = indexedDB.open("DesktopDB", this.dbVersion);
 
     req.onupgradeneeded = (event) => {
       const db = event.target.result;
@@ -25,16 +25,33 @@ class IndexedDBOffline {
       Object.keys(dbData).forEach((key) => {
         const table = dbData[key];
         if (!Array.isArray(table) || table.length == 0) return;
-        const rows = Object.keys(table[0]);
-        let store = db.createObjectStore(key, { keyPath: rows[0] });
-        rows.slice(1).forEach((row) => {
-          store.createIndex(row, row, { unique: false });
-        });
+        // 已存在的 ObjectStore，不重新建立，只加欄位或處理資料
+        if (db.objectStoreNames.contains(key)) {
+          const store = tx.objectStore(key);
 
-        store = tx.objectStore(key);
-        table.forEach((item) => {
-          store.add(item);
-        });
+          const existingIndexes = Array.from(store.indexNames);
+          const newFields = Object.keys(table[0]).filter(field => !existingIndexes.includes(field));
+
+          newFields.forEach(field => {
+            if (field !== store.keyPath) {
+              store.createIndex(field, field, { unique: false });
+            }
+          });
+
+          table.forEach((item) => store.put(item)); // 更新或新增
+        } else {
+          // 新增 ObjectStore
+          const rows = Object.keys(table[0]);
+          let store = db.createObjectStore(key, { keyPath: rows[0] });
+          rows.slice(1).forEach((row) => {
+            store.createIndex(row, row, { unique: false });
+          });
+
+          store = tx.objectStore(key);
+          table.forEach((item) => {
+            store.add(item);
+          });
+        }
       });
 
       tx.oncomplete = () => {
@@ -98,7 +115,7 @@ class IndexedDBOffline {
    */
   async getDBInstance() {
     return new Promise((resolve, reject) => {
-      const req = indexedDB.open("DesktopDB", 1);
+      const req = indexedDB.open("DesktopDB", this.dbVersion);
       req.onsuccess = () => resolve(req.result);
       req.onerror = (err) => reject(err);
     });

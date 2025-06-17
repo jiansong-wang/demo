@@ -28,6 +28,7 @@ class Desktop {
     }
 
     init() {
+        this.setPos();
         setInterval(() => { this.updateDateTime(); }, 1000);
 
         this.notification.onclick = (e) => {
@@ -55,6 +56,61 @@ class Desktop {
         }
 
         //console.log(this.iframeWindow);
+    }
+
+    /**設定位置*/
+    setPos() {
+        const CELL_SIZE = 15 + 2; // cell size + gap
+        const cols = Math.floor(window.innerWidth / CELL_SIZE);
+        const rows = Math.floor(window.innerHeight / CELL_SIZE);
+        const occupied = Array.from({ length: rows }, () => Array(cols).fill(false));
+
+        for (const item of this.wraps) {
+            let x = (item.dataset.x || 1) * 1 - 1;
+            let y = (item.dataset.y || 1) * 1 - 1;
+            let w = (item.dataset.w || 4) * 1;
+            let h = (item.dataset.h || 4) * 1;
+
+            // 如果原始位置就能放就用
+            if (!isFree(x, y, w, h)) {
+                let placed = false;
+                for (let ny = 0; ny < rows && !placed; ny++) {
+                    for (let nx = 0; nx < cols && !placed; nx++) {
+                        if (isFree(nx, ny, w, h)) {
+                            x = nx;
+                            y = ny;
+                            placed = true;
+                        }
+                    }
+                }
+            }
+
+            occupy(x, y, w, h);
+
+            item.style.setProperty('--x', x + 1);
+            item.style.setProperty('--y', y + 1);
+            item.style.setProperty('--w', w);
+            item.style.setProperty('--h', h);
+        }
+
+        function isFree(x, y, w, h) {
+            if (x + w > cols || y + h > rows) return false;
+            for (let dy = 0; dy < h; dy++) {
+                for (let dx = 0; dx < w; dx++) {
+                    if (occupied[y + dy]?.[x + dx]) return false;
+                }
+            }
+            return true;
+        }
+
+        function occupy(x, y, w, h) {
+            for (let dy = 0; dy < h; dy++) {
+                for (let dx = 0; dx < w; dx++) {
+                    occupied[y + dy][x + dx] = true;
+                }
+            }
+        }
+
     }
 
     /**更新時間 */
