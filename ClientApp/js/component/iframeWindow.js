@@ -15,6 +15,9 @@ class IframeWindow {
   }
 
   init(target) {
+    if (!target.dataset.click) {
+      return;
+    }
     target.onclick = (e) => {
       e.stopPropagation();
       //e.preventDefault();
@@ -24,7 +27,7 @@ class IframeWindow {
     target.ondblclick = (e) => {
       e.stopPropagation();
       //e.preventDefault();
-      this.currentClick.removeAttribute("class");
+      this.currentClick.classList.remove("click");
       this.open(target).then((windowEle) => {
         windowEle.style.zIndex = this.zIndex;
         this.zIndex += 1;
@@ -32,6 +35,7 @@ class IframeWindow {
         this.applyStylesBasedOnWidth(windowEle);
         this.resizable(windowEle);
         this.closeable(windowEle);
+        this.bigable(windowEle);
         this.smallable(windowEle);
         this.moveable(windowEle);
         this.clickable(windowEle);
@@ -58,11 +62,11 @@ class IframeWindow {
    */
   choose(target) {
     if (this.currentClick) {
-      this.currentClick.removeAttribute("class");
+      this.currentClick.classList.remove("click");
       this.currentClick = null;
     }
     if (target) {
-      target.className = "click";
+      target.classList.add("click");
       this.currentClick = target;
     }
   }
@@ -76,7 +80,7 @@ class IframeWindow {
     return new Promise((resolve) => {
       if (target) {
         const title = target.title;
-        const iconPath = target.querySelector("[data-icon]").src;
+        const iconPath = target.querySelector("[data-icon]")?.src || "";
         const data = { title, iconPath, w: target.dataset.w, h: target.dataset.h };
         Ajax.conn({
           type: "post", url: target.dataset.href, data: { id: target.dataset.value }, fn: async (res) => {
@@ -143,7 +147,7 @@ class IframeWindow {
   clearChoose() {
     document.addEventListener("click", () => {
       if (this.currentClick) {
-        this.currentClick.removeAttribute("class");
+        this.currentClick.classList.remove("click");
         this.currentClick = null;
       }
     });
@@ -171,6 +175,25 @@ class IframeWindow {
   }
 
   /**
+   * 放大視窗按鈕
+   * @param {Element} iframe 視窗元素
+   */
+  bigable(iframe) {
+    iframe.querySelector("#bigWindow").onclick = (e) => {
+      e.stopPropagation();
+      if (this.currentWindow != iframe) {
+        this.currentWindow = iframe;
+        iframe.style.zIndex = this.zIndex;
+        this.zIndex += 1;
+      }
+
+      iframe.classList.toggle("fillWindow");
+
+      this.navSticky();
+    };
+  }
+
+  /**
    * 縮小視窗按鈕
    * @param {Element} iframe 視窗元素
    */
@@ -185,10 +208,10 @@ class IframeWindow {
 
       const w = this.allWindows.find(a => a.ele == iframe);
       if (w) {
-        w.btn.classList.toggle("closed");
+        w.btn.classList.remove("closed");
         w.open = false;
       }
-      iframe.classList.toggle("closed");
+      iframe.classList.add("closed");
 
       this.navSticky();
     };
@@ -214,7 +237,7 @@ class IframeWindow {
         iframe.style.zIndex = this.zIndex;
         this.zIndex += 1;
       } else {
-        iframe.classList.toggle("closed");
+        iframe.classList.remove("closed");
         if (this.currentWindow != iframe) {
           this.currentWindow = iframe;
           iframe.style.zIndex = this.zIndex;
@@ -222,7 +245,7 @@ class IframeWindow {
 
         }
         w.open = true;
-        e.currentTarget.classList.toggle("closed");
+        e.currentTarget.classList.add("closed");
       }
 
       this.navSticky();
@@ -242,7 +265,7 @@ class IframeWindow {
     ele.onmousedown = function (e) {
       if (isClick) {
         isClick = false;
-        this.classList.toggle("softQ");
+        this.classList.remove("softQ");
       }
 
       boxLeft = e.clientX - this.getBoundingClientRect().left;
@@ -261,7 +284,7 @@ class IframeWindow {
     function stopMove() {
       isClick = true;
       that.adsorption(ele);
-      ele.classList.toggle("softQ");
+      ele.classList.add("softQ");
       window.removeEventListener("mousemove", move);
       window.removeEventListener("mouseup", stopMove);
     }
@@ -407,6 +430,7 @@ class IframeWindow {
         this.applyStylesBasedOnWidth(windowEle);
         this.resizable(windowEle);
         this.closeable(windowEle);
+        this.bigable(windowEle);
         this.smallable(windowEle);
         this.moveable(windowEle);
         this.clickable(windowEle);
