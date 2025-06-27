@@ -1,6 +1,8 @@
 ﻿import homeApi from "../api/Home.js";
 import musicApi from "../api/Music.js";
 import aquariumApi from "../api/Aquarium.js";
+import folderApi from "../api/Folder.js";
+import fileApi from "../api/File.js";
 import timeApi from "../api/Time.js";
 class IndexedDBOffline {
   constructor() {
@@ -83,7 +85,7 @@ class IndexedDBOffline {
    * 註冊API
    */
   registerAPI() {
-    const apiList = [homeApi, musicApi, aquariumApi, timeApi];
+    const apiList = [homeApi, musicApi, aquariumApi, folderApi, fileApi, timeApi];
     apiList.forEach(api => {
       for (const [url, handler] of Object.entries(api)) {
         this.api[url] = async (data) => handler(this, data);

@@ -343,6 +343,7 @@ class IframeWindow {
 
         boxLeft = e.clientX - this.parentNode.getBoundingClientRect().left;
         boxTop = e.clientY - this.parentNode.getBoundingClientRect().top;
+        iframe.classList.toggle("dragging");
 
         window.addEventListener("mousemove", move);
         window.addEventListener("mouseup", stopMove);
@@ -357,6 +358,7 @@ class IframeWindow {
 
     function stopMove() {
       isClick = true;
+      iframe.classList.toggle("dragging");
       window.removeEventListener("mousemove", move);
       window.removeEventListener("mouseup", stopMove);
     }

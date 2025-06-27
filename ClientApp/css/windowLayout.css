@@ -15,6 +15,12 @@
   border-radius: 16px;
   border: 2px dashed #aaa;
   box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.defaultWindow.dragging:not(.fillWindow) {
+  transform: scale(1.03) rotate(0.5deg);
+  box-shadow: 12px 12px 0 rgba(0, 0, 0, 0.1);
 }
 
 :is(.defaultWindow, .fillWindow)>.iframe {
